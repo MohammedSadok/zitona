@@ -60,6 +60,17 @@ LocaleConfig.defaultLocale = "fr";
 const CalendarView = () => {
   return (
     <Calendar
+      className="mx-3 rounded-lg"
+      // theme={{
+      //   arrowColor: "white",
+      //   "stylesheet.calendar.header": {
+      //     week: {
+      //       marginTop: 0,
+      //       flexDirection: "row",
+      //       justifyContent: "space-between",
+      //     },
+      //   },
+      // }}
       style={{
         shadowColor: "#000",
         shadowOffset: {
@@ -68,10 +79,11 @@ const CalendarView = () => {
         },
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
-
+        margin: 0,
         elevation: 4,
+        padding: 0,
+        // height: '50%',
       }}
-      className="mx-3 rounded-lg"
       initialDate={"2023-05-20"}
       markingType="period"
       markedDates={{
@@ -93,6 +105,14 @@ const CalendarView = () => {
         },
         "2023-05-25": { endingDay: true, color: "lightgreen" },
       }}
+      theme={{
+
+        // dotColor: COLORS.GREEN,
+        // selectedDotColor: COLORS.PRIMARY,
+        'stylesheet.calendar.header': { week: { marginTop: 2 }, }
+
+    }}
+      headerStyle={{ height: 50 }}
     />
   );
 };

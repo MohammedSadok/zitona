@@ -30,7 +30,7 @@ const Fertilisation = ({ navigation }) => {
       <TouchableOpacity
         style={{ backgroundColor: "#5FA88C" }}
         // onPress={() => navigation.goBack()}
-        className="absolute p-3 rounded-full bottom-10 right-10 w-min"
+        className="absolute p-3 rounded-full bottom-6 right-6 w-min"
       >
         <Entypo name="plus" size={36} color="white" />
       </TouchableOpacity>

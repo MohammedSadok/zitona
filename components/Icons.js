@@ -27,7 +27,7 @@ export const Icons = {
 }
 
 const Icon = ({ type, name, color, size = 24, style }) => {
-    const fontSize = 24;
+    const fontSize = 20;
     const Tag = type;
     return (
         <>

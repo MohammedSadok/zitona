@@ -2,15 +2,57 @@ import {
   View,
   Text,
   ImageBackground,
-  Image,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import { useState } from "react";
 import Item from "../components/Item";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ModalPopUp from "../components/modals/ModalPopUp";
+import {
+  useFonts,
+  Mulish_400Regular,
+  Mulish_700Bold,
+} from "@expo-google-fonts/mulish";
 const Profile = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [loaded] = useFonts({
+    Mulish_400Regular,
+    Mulish_700Bold,
+  });
+  if (!loaded) {
+    return null;
+  }
   return (
     <SafeAreaView className="flex-col items-center flex-1 px-2 bg-white">
+      <ModalPopUp
+        isVisible={isVisible}
+        setIsVisible={() => setIsVisible(false)}
+        title="Quiter"
+      >
+        <View className="w-4/6 px-3">
+          <Text className="">Vouler vous vraiement quitter l'application</Text>
+          <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
+            <TouchableOpacity className="px-6 py-2.5 bg-red-600 rounded-md">
+              <Text
+                className="text-xl text-white"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Oui
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="px-6 py-2.5 bg-slate-300 rounded-md">
+              <Text
+                className="text-xl"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Annuler
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ModalPopUp>
+
       <View className="w-24 h-24">
         <ImageBackground
           className="relative flex-1"
@@ -30,19 +72,16 @@ const Profile = () => {
       <View className="w-full p-2 rounded-lg bg-slate-100 h-1/4">
         <Text>3 boskets</Text>
       </View>
-      <Item
-        title={"Transaction List"}
-        text={"Transactions You Have"}
-        image={require("../assets/profile/List.png")}
-        width={17}
-        height={20}
-        color={"#E0FFF0"}
-        // handleClick={() => navigation.navigate("Transactions")}
-      />
-      <Text className="w-full ml-4 text-lg font-semibold text-left">
-        Settings
-      </Text>
-      <View className="justify-between w-full h-2/6">
+      <ScrollView className="w-full space-y-5 h-3/5">
+        <Item
+          title={"Transaction List"}
+          text={"Transactions You Have"}
+          image={require("../assets/profile/List.png")}
+          width={17}
+          height={20}
+          color={"#E0FFF0"}
+          // handleClick={() => navigation.navigate("Transactions")}
+        />
         <Item
           title={"Privacy"}
           text={"Change email and password"}
@@ -75,9 +114,9 @@ const Profile = () => {
           width={21}
           height={21}
           color={"#FFE0E0"}
-          handleClick={() => toggleModal()}
+          handleClick={() => setIsVisible(true)}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

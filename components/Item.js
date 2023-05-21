@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Image,Dimensions } from "react-native";
 import {
   useFonts,
   Mulish_400Regular,
@@ -16,7 +16,7 @@ const Item = (props) => {
   }
   return (
     <TouchableOpacity
-      className="flex-row items-center justify-between w-full p-2 my-1 bg-white rounded-lg"
+      className="flex-row items-center justify-between w-full p-2 bg-white rounded-lg"
       onPress={props.handleClick}
       style={styles.container}
     >
@@ -55,5 +55,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.0,
 
     elevation: 1,
+    marginVertical: Dimensions.get("window").height *0.01
   },
+  
 });
