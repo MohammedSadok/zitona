@@ -1,11 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartView from "../components/BarChart";
-import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+// import AddNew from "../components/addNew";
 const Recolt = ({ navigation }) => {
   const data = [
     { value: 241, color: "#283618" },
@@ -15,23 +13,15 @@ const Recolt = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <TouchableOpacity
-        style={{ backgroundColor: "#7A5E7E" }}
-        onPress={() => navigation.goBack()}
-        className="absolute p-1 rounded-md top-8 left-5 w-min"
-      >
-        <AntDesign name="arrowleft" size={36} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ backgroundColor: "#7A5E7E" }}
-        // onPress={() => navigation.goBack()}
-        className="absolute p-3 rounded-full bottom-10 right-10 w-min"
-      >
-        <Entypo name="plus" size={36} color="white" />
-      </TouchableOpacity>
-      <Text className="my-2 text-2xl font-bold text-center">Recolt</Text>
-      <BarChartView color={'#2DA779'}/>                                           
+    <View
+      className="flex-1 bg-white"
+      style={{ backgroundColor: Colors.backgroundColor }}
+    >
+      {/* <AddNew /> */}
+
+      <View className="mx-auto my-2">
+        <BarChartView color={"#2DA779"} />
+      </View>
       <View className="flex-row items-center justify-between mx-3 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <View className="flex-row items-center justify-between space-x-2">
@@ -52,8 +42,9 @@ const Recolt = ({ navigation }) => {
           ...description sur l’arrosage ...
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
-};4
+};
+4;
 
 export default Recolt;

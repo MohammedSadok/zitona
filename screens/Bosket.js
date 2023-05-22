@@ -27,9 +27,9 @@ const Bosket = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState({ add: false, update: false });
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={[styles.container]}>
-
-        
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
+      >
         <ModalPopUp
           isVisible={isVisible.add}
           setIsVisible={() => setIsVisible({ ...isVisible, add: false })}
@@ -91,13 +91,13 @@ const Bosket = ({ navigation }) => {
           <View className="mx-2">
             <BarChartView color={Colors.green} />
           </View>
-          <View className="flex-col justify-between p-3 m-2 bg-white rounded-md h-52">
+          <View className="flex-col justify-between p-3 m-2 bg-white rounded-md">
             <Text className="text-lg font-bold">About</Text>
             <Text className="">
               des information generale sur le bosquet localisation ...des
               information generale sur le bosquet localisation ...
             </Text>
-            <View className="flex-row items-center justify-between p-2 m-3">
+            <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
               <View className="flex-col items-center justify-between space-y-1">
                 <FontAwesome5 name="tree" size={30} color="#606C38" />
                 <Text className="">arbre d'olivier</Text>
@@ -119,7 +119,12 @@ const Bosket = ({ navigation }) => {
               </View>
             </View>
           </View>
-          <View className="flex-row items-center justify-around w-full">
+          <View
+            className="flex-row items-center justify-around w-full"
+            style={{
+              marginTop: Dimensions.get("screen").height > 700 ? "5%" : 0,
+            }}
+          >
             <TouchableOpacity
               onPress={() => setIsVisible({ ...isVisible, add: true })}
               className="px-12 py-3 rounded-lg bg-slate-200"
@@ -135,9 +140,6 @@ const Bosket = ({ navigation }) => {
               <Text className="text-lg font-bold text-white">Modifier</Text>
             </TouchableOpacity>
           </View>
-          {Dimensions.get("window").height < 680 && (
-            <View style={{ height: 90 }}></View>
-          )}
         </ScrollView>
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -149,6 +151,5 @@ export default Bosket;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: Colors.backgroundColor,
   },
 });

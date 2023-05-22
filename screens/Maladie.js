@@ -1,11 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import PieChart from "../components/charts/PieChart";
-import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
+// import AddNew from "../components/addNew";
+import Colors from "../constants/Colors";
 const Maladie = ({ navigation }) => {
   const data = [
     { value: 241, color: "#283618" },
@@ -15,22 +14,11 @@ const Maladie = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <TouchableOpacity
-        style={{ backgroundColor: "#7A5E7E" }}
-        onPress={() => navigation.goBack()}
-        className="absolute p-1 rounded-md top-8 left-5 w-min"
-      >
-        <AntDesign name="arrowleft" size={36} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ backgroundColor: "#7A5E7E" }}
-        // onPress={() => navigation.goBack()}
-        className="absolute p-3 rounded-full bottom-10 right-10 w-min"
-      >
-        <Entypo name="plus" size={36} color="white" />
-      </TouchableOpacity>
-      <Text className="my-2 text-2xl font-bold text-center">Maladie</Text>
+    <View
+      className="flex-1 bg-white"
+      style={{ backgroundColor: Colors.backgroundColor }}
+    >
+      {/* <AddNew /> */}
       <View className="flex-row items-center justify-between p-2 mx-2">
         <PieChart data={data} />
         <View className="">
@@ -62,7 +50,10 @@ const Maladie = ({ navigation }) => {
           <Text className="">Sort/Filter</Text>
         </View>
       </View>
-      <TouchableOpacity className="p-3 mx-2 mb-2 rounded-md" style={{backgroundColor: '#FAF8F0'}}>
+      <TouchableOpacity
+        className="p-3 mx-2 mb-2 rounded-md"
+        style={{ backgroundColor: "#FAF8F0" }}
+      >
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center space-x-2">
             <Text className="text-2xl font-bold">5</Text>
@@ -76,7 +67,10 @@ const Maladie = ({ navigation }) => {
           ...description sur l’arrosage ...
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity className="p-3 mx-2 mb-2 rounded-md" style={{backgroundColor: '#FAF8F0'}}>
+      <TouchableOpacity
+        className="p-3 mx-2 mb-2 rounded-md"
+        style={{ backgroundColor: "#FAF8F0" }}
+      >
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center space-x-2">
             <Text className="text-2xl font-bold">5</Text>
@@ -90,7 +84,10 @@ const Maladie = ({ navigation }) => {
           ...description sur l’arrosage ...
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity className="p-3 mx-2 mb-2 rounded-md" style={{backgroundColor: '#FAF8F0'}}>
+      <TouchableOpacity
+        className="p-3 mx-2 mb-2 rounded-md"
+        style={{ backgroundColor: "#FAF8F0" }}
+      >
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center space-x-2">
             <Text className="text-2xl font-bold">5</Text>
@@ -104,7 +101,7 @@ const Maladie = ({ navigation }) => {
           ...description sur l’arrosage ...
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

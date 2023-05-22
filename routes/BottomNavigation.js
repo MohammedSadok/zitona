@@ -1,28 +1,30 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useEffect, useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Icon, { Icons } from "../components/Icons";
+import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-import * as Animatable from "react-native-animatable";
-import Bosket from "../screens/Bosket"
+import BosketNavigation from "./BosketNavigation";
 import Home from "../screens/Home";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
+import Icon, { Icons } from "../components/Icons";
+import {
+  useFonts,
+  Mulish_400Regular,
+  Mulish_700Bold,
+} from "@expo-google-fonts/mulish";
 const TabArr = [
   {
     route: "Home",
     label: "Home",
-    type: Icons.Feather,
+    type: Icons.Entypo,
     icon: "home",
     component: Home,
   },
-  // { route: 'Search', label: 'Search', type: Icons.Feather, icon: 'search', component: BosketNavigation },
-  // { route: 'Add', label: 'Add', type: Icons.Feather, icon: 'plus-square', component: BosketNavigation },
   {
-    route: "Bosket",
+    route: "BosketNavigation",
     label: "Bosket",
     type: Icons.MaterialIcons,
     icon: "agriculture",
-    component: Bosket,
+    component: BosketNavigation,
   },
   {
     route: "Profile",
@@ -34,87 +36,57 @@ const TabArr = [
 ];
 
 const Tab = createBottomTabNavigator();
-
-const animate1 = {
-  0: { scale: 0.5, translateY: 7 },
-  1: { scale: 1.2, translateY: -15 },
-};
-const animate2 = {
-  0: { scale: 1.2, translateY: -15 },
-  1: { scale: 1, translateY: 7 },
-};
-
-const circle1 = { 0: { scale: 0 }, 1: { scale: 1 } };
-const circle2 = { 0: { scale: 1 }, 1: { scale: 0 } };
-
-const TabButton = (props) => {
-  const { item, onPress, accessibilityState } = props;
-  const focused = accessibilityState.selected;
-  const viewRef = useRef(null);
-  const circleRef = useRef(null);
-  const textRef = useRef(null);
-
-  useEffect(() => {
-    if (focused) {
-      viewRef.current.animate(animate1);
-      circleRef.current.animate(circle1);
-      textRef.current.transitionTo({ scale: 1 });
-    } else {
-      viewRef.current.animate(animate2);
-      circleRef.current.animate(circle2);
-      textRef.current.transitionTo({ scale: 0 });
-    }
-  }, [focused]);
-
+const BottomNavigation = () => {
+  const [loaded] = useFonts({
+    Mulish_400Regular,
+    Mulish_700Bold,
+  });
+  if (!loaded) {
+    return null;
+  }
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={1}
-      style={styles.container}
-    >
-      <Animatable.View ref={viewRef} duration={500} style={styles.container}>
-        <View style={styles.btn}>
-          <Animatable.View ref={circleRef} style={styles.circle} />
-          <Icon
-            type={item.type}
-            name={item.icon}
-            color={focused ? Colors.white : Colors.primary}
-          />
-        </View>
-        <Animatable.Text ref={textRef} style={styles.text}>
-          {item.label}
-        </Animatable.Text>
-      </Animatable.View>
-    </TouchableOpacity>
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          tabBarActiveTintColor: Colors.primary,
+          tabBarInactiveTintColor: Colors.gray,
+        }}
+      >
+        {TabArr.map((item, index) => {
+          return (
+            <Tab.Screen
+              key={index}
+              name={item.route}
+              component={item.component}
+              options={{
+                headerShown: false,
+                tabBarIconStyle: {
+                  padding: 0,
+                  marginBottom: 0,
+                },
+                tabBarLabelStyle: {
+                  fontFamily: "Mulish_700Bold",
+                  marginBottom: 4,
+                },
+                tabBarLabel: item.label,
+                tabBarIcon: ({ color }) => (
+                  <Icon
+                    type={item.type}
+                    name={item.icon}
+                    color={color}
+                    size={26}
+                  />
+                ),
+              }}
+            />
+          );
+        })}
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
-
-export default function AnimTab1() {
-  return (
-    <Tab.Navigator
-      initialRouteName="Bosket"
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: styles.tabBar,
-      }}
-    >
-      {TabArr.map((item, index) => {
-        return (
-          <Tab.Screen
-            key={index}
-            name={item.route}
-            component={item.component}
-            options={{
-              tabBarShowLabel: false,
-              tabBarButton: (props) => <TabButton {...props} item={item} />,
-            }}
-          />
-        );
-      })}
-    </Tab.Navigator>
-  );
-}
-
+export default BottomNavigation;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

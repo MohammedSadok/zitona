@@ -4,6 +4,7 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  Dimensions
 } from "react-native";
 import { useState } from "react";
 import Item from "../components/Item";
@@ -14,6 +15,7 @@ import {
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
+import Colors from "../constants/Colors";
 const Profile = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [loaded] = useFonts({
@@ -24,7 +26,10 @@ const Profile = () => {
     return null;
   }
   return (
-    <SafeAreaView className="flex-col items-center flex-1 px-2 bg-white">
+    <SafeAreaView
+      className="flex-col items-center justify-between flex-1 px-2"
+      style={{ backgroundColor: Colors.backgroundColor }}
+    >
       <ModalPopUp
         isVisible={isVisible}
         setIsVisible={() => setIsVisible(false)}
@@ -52,27 +57,28 @@ const Profile = () => {
           </View>
         </View>
       </ModalPopUp>
-
-      <View className="w-24 h-24">
-        <ImageBackground
-          className="relative flex-1"
-          source={require("../assets/profile/user.png")}
-          resizeMode="contain"
-        >
-          <TouchableOpacity className="absolute right-0 w-10 h-10 -bottom-2">
-            <ImageBackground
-              className="flex-1"
-              source={require("../assets/profile/modifier.png")}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </ImageBackground>
+      <View className='flex-col items-center justify-between'>
+        <View className="w-24 h-24">
+          <ImageBackground
+            className="relative flex-1"
+            source={require("../assets/profile/user.png")}
+            resizeMode="contain"
+          >
+            <TouchableOpacity className="absolute right-0 w-10 h-10 -bottom-2">
+              <ImageBackground
+                className="flex-1"
+                source={require("../assets/profile/modifier.png")}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        <Text className="my-1 text-2xl font-bold">Mohammed Sadok</Text>
       </View>
-      <Text className="my-1 text-2xl font-bold">Mohammed Sadok</Text>
-      <View className="w-full p-2 rounded-lg bg-slate-100 h-1/4">
+      <View className="w-full p-2 rounded-lg bg-slate-100 h-1/4" style={{marginVertical: Dimensions.get("screen").height > 700 ? "5%" : 0,}}>
         <Text>3 boskets</Text>
       </View>
-      <ScrollView className="w-full space-y-5 h-3/5">
+      <ScrollView className="w-full">
         <Item
           title={"Transaction List"}
           text={"Transactions You Have"}

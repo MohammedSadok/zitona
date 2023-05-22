@@ -57,7 +57,8 @@ const BarChartView = ({ color }) => {
           },
         }}
         style={{
-          marginVertical: 8,
+          // marginVertical: 8,
+
           borderRadius: 16,
           paddingRight: 0,
         }}
