@@ -1,10 +1,10 @@
-import BottomNavigation from "./routes/BottomNavigation";
-import LoginNavigation from "./routes/LoginNavigation";
-import { NavigationContainer } from "@react-navigation/native";
+import AuthNavigator from "./routes/AuthNavigator";
+import { Provider } from "react-redux";
+import { store } from "./redux";
 export default function App() {
   return (
-    <NavigationContainer>
-      <LoginNavigation />
-    </NavigationContainer>
+    <Provider store={store}>
+      <AuthNavigator/>
+    </Provider>
   );
 }
