@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import BarChartView from "../components/BarChart";
+import BarChartView from "../components/charts/BarChart";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import AddNew from "../components/AddNew";
+import Chart from "../components/charts/Chart";
 // import AddNew from "../components/addNew";
 const Recolt = ({ navigation }) => {
   const data = [
@@ -17,12 +19,12 @@ const Recolt = ({ navigation }) => {
       className="flex-1 bg-white"
       style={{ backgroundColor: Colors.backgroundColor }}
     >
-      {/* <AddNew /> */}
+      <AddNew />
 
-      <View className="mx-auto my-2">
-        <BarChartView color={"#2DA779"} />
+      <View className='mx-2 mt-2 h-1/3 rounded-xl'>
+        <Chart />
       </View>
-      <View className="flex-row items-center justify-between mx-3 mb-2">
+      <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <View className="flex-row items-center justify-between space-x-2">
           <Feather name="sliders" size={24} color="black" />

@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  useFonts,
+  Mulish_400Regular,
+  Mulish_700Bold,
+} from "@expo-google-fonts/mulish";
 const Input = ({
   label,
   iconName,
@@ -13,8 +18,15 @@ const Input = ({
 }) => {
   const [hidePassword, setHidePassword] = React.useState(password);
   const [isFocused, setIsFocused] = React.useState(false);
+  const [loaded] = useFonts({
+    Mulish_400Regular,
+    Mulish_700Bold,
+  });
+  if (!loaded) {
+    return null;
+  }
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View style={{ marginBottom: iconName ? 20 : 5 }}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[
@@ -67,12 +79,13 @@ const style = StyleSheet.create({
     marginVertical: 5,
     fontSize: 14,
     color: Colors.black,
+    fontFamily: "Mulish_400Regular",
   },
   inputContainer: {
     height: 55,
     backgroundColor: Colors.light,
     flexDirection: "row",
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     borderWidth: 0.5,
     borderRadius: 8,
   },

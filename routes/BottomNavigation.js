@@ -1,11 +1,10 @@
-import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import BosketNavigation from "./BosketNavigation";
 import Home from "../screens/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Profile from "../screens/Profile";
-import Icon, { Icons } from "../components/Icons";
+import ProfileNavigation from "./ProfileNavigation";
+import Icon, { Icons } from "../components/general/Icons";
 import {
   useFonts,
   Mulish_400Regular,
@@ -27,11 +26,11 @@ const TabArr = [
     component: BosketNavigation,
   },
   {
-    route: "Profile",
+    route: "ProfileNavigation",
     label: "Profile",
     type: Icons.FontAwesome,
     icon: "user-circle-o",
-    component: Profile,
+    component: ProfileNavigation,
   },
 ];
 
@@ -87,40 +86,3 @@ const BottomNavigation = () => {
   );
 };
 export default BottomNavigation;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  tabBar: {
-    height: 60,
-    position: "absolute",
-    bottom: 10,
-    right: 16,
-    left: 16,
-    borderRadius: 16,
-  },
-  btn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 4,
-    borderColor: Colors.white,
-    backgroundColor: Colors.white,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  circle: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.primary,
-    borderRadius: 25,
-  },
-  text: {
-    fontSize: 10,
-    textAlign: "center",
-    color: Colors.primary,
-  },
-});

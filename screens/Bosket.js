@@ -14,7 +14,7 @@ import Colors from "../constants/Colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import BarChartView from "../components/BarChart";
+import BarChartView from "../components/charts/BarChart";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ModalPopUp from "../components/modals/ModalPopUp";
 const slides = {
@@ -88,7 +88,20 @@ const Bosket = ({ navigation }) => {
           />
         </View>
         <ScrollView>
-          <View className="mx-2">
+          <View
+            className="mx-2 bg-white rounded-lg"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 1.41,
+
+              elevation: 1,
+            }}
+          >
             <BarChartView color={Colors.green} />
           </View>
           <View className="flex-col justify-between p-3 m-2 bg-white rounded-md">

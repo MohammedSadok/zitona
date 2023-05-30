@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Keyboard, TouchableOpacity } from "react-native";
 import Colors from "../../constants/Colors";
-import Input from "../../components/Input";
+import Input from "../../components/general/Input";
 import { SafeAreaView } from "react-native-safe-area-context";
 const NameScreen = ({ navigation }) => {
   const [inputs, setInputs] = React.useState({

@@ -4,19 +4,22 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { useState } from "react";
 import Item from "../components/Item";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ModalPopUp from "../components/modals/ModalPopUp";
+import { logout } from "../services/UserService";
+import { useDispatch } from "react-redux";
 import {
   useFonts,
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 import Colors from "../constants/Colors";
-const Profile = () => {
+const Profile = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [loaded] = useFonts({
     Mulish_400Regular,
@@ -38,7 +41,10 @@ const Profile = () => {
         <View className="w-4/6 px-3">
           <Text className="">Vouler vous vraiement quitter l'application</Text>
           <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
-            <TouchableOpacity className="px-6 py-2.5 bg-red-600 rounded-md">
+            <TouchableOpacity
+              className="px-6 py-2.5 bg-red-600 rounded-md"
+              onPress={() => dispatch(logout())}
+            >
               <Text
                 className="text-xl text-white"
                 style={{ fontFamily: "Mulish_700Bold" }}
@@ -46,7 +52,10 @@ const Profile = () => {
                 Oui
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="px-6 py-2.5 bg-slate-300 rounded-md">
+            <TouchableOpacity
+              className="px-6 py-2.5 bg-slate-300 rounded-md"
+              onPress={() => setIsVisible(false)}
+            >
               <Text
                 className="text-xl"
                 style={{ fontFamily: "Mulish_700Bold" }}
@@ -57,7 +66,7 @@ const Profile = () => {
           </View>
         </View>
       </ModalPopUp>
-      <View className='flex-col items-center justify-between'>
+      <View className="flex-col items-center justify-between">
         <View className="w-24 h-24">
           <ImageBackground
             className="relative flex-1"
@@ -75,7 +84,12 @@ const Profile = () => {
         </View>
         <Text className="my-1 text-2xl font-bold">Mohammed Sadok</Text>
       </View>
-      <View className="w-full p-2 rounded-lg bg-slate-100 h-1/4" style={{marginVertical: Dimensions.get("screen").height > 700 ? "5%" : 0,}}>
+      <View
+        className="w-full p-2 rounded-lg bg-slate-100 h-1/4"
+        style={{
+          marginVertical: Dimensions.get("screen").height > 700 ? "5%" : 0,
+        }}
+      >
         <Text>3 boskets</Text>
       </View>
       <ScrollView className="w-full">
@@ -86,7 +100,7 @@ const Profile = () => {
           width={17}
           height={20}
           color={"#E0FFF0"}
-          // handleClick={() => navigation.navigate("Transactions")}
+          handleClick={() => navigation.navigate("Boskets")}
         />
         <Item
           title={"Privacy"}
@@ -95,6 +109,7 @@ const Profile = () => {
           width={17}
           height={20}
           color={"#E0FDFF"}
+          handleClick={() => navigation.navigate("Privacy")}
         />
         <Item
           title={"Portfolio"}
@@ -103,7 +118,7 @@ const Profile = () => {
           width={20}
           height={18}
           color={"#F1E0FF"}
-          handleClick={() => navigation.navigate("PortfolioScreen")}
+          handleClick={() => navigation.navigate("Portfolio")}
         />
         <Item
           title={"Notifications"}
@@ -112,6 +127,7 @@ const Profile = () => {
           width={17}
           height={20}
           color={"#FFFCE0"}
+          handleClick={() => navigation.navigate("Notifications")}
         />
         <Item
           title={"Go out"}

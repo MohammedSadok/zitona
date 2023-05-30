@@ -37,9 +37,9 @@ const BarChartView = ({ color }) => {
         // withCustomBarColorFromData={true}
         showValuesOnTopOfBars={true}
         chartConfig={{
-          backgroundColor: "#f1f1f1",
-          backgroundGradientFrom: "#f9f9f9",
-          backgroundGradientTo: "#f9f9f9",
+          backgroundColor: "#ffffff",
+          backgroundGradientFrom: "#ffffff",
+          backgroundGradientTo: "#ffffff",
           backgroundGradientFromOpacity: 1,
           backgroundGradientToOpacity: 1,
           fillShadowGradient: color,

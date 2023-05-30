@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const initialState = {
   user: null,
@@ -29,7 +29,7 @@ const authSlice = createSlice({
       state.user = null;
       state.error = action.payload;
     },
-    logout: (state) => {
+    logoutStart: (state) => {
       state.loading = false;
       state.isAuthenticated = false;
       state.user = null;
@@ -58,27 +58,12 @@ export const {
   loginStart,
   loginSuccess,
   loginFailure,
-  logout,
+  logoutStart,
   createAccountStart,
   createAccountSuccess,
   createAccountFailure,
 } = authSlice.actions;
 
-export const checkLoggedInUser = () => async (dispatch) => {
-  console.log("Checking");
-  try {
-    // Retrieve user data from AsyncStorage
-    const userData = await AsyncStorage.getItem("userData");
 
-    if (userData) {
-      const user = JSON.parse(userData);
-      dispatch(loginSuccess(user));
-    } else {
-      dispatch(logout());
-    }
-  } catch (error) {
-    dispatch(logout());
-  }
-};
 
 export default authSlice.reducer;

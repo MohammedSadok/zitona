@@ -3,33 +3,41 @@ import {
   Text,
   SafeAreaView,
   Keyboard,
-  Alert,
-  Image,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
 import Colors from "../constants/Colors";
-import Input from "../components/Input";
+import Input from "../components/general/Input";
 import { useState } from "react";
-
-const Login = ({navigation}) => {
+import { loginStart, loginSuccess, loginFailure } from "../redux/authSlice";
+import Loader from "../components/general/Loader";
+import { login } from "../services/UserService";
+import { useDispatch, useSelector } from "react-redux";
+const Login = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const isLoading = useSelector((state) => state.userAuth.loading);
 
   const validate = async () => {
+    dispatch(loginStart());
     Keyboard.dismiss();
     let isValid = true;
     if (!inputs.email) {
-      handleError("Please input email", "email");
+      handleError("Veuillez entrer votre adresse e-mail", "email");
       isValid = false;
+      dispatch(loginFailure("login failed"));
     }
     if (!inputs.password) {
-      handleError("Please input password", "password");
+      handleError("Veuillez entrer votre mot de passe", "password");
       isValid = false;
+      dispatch(loginFailure("login failed"));
     }
     if (isValid) {
-      // loginUser();
+      // wait a few seconds before continuing
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      login(inputs.email, inputs.password);
+      dispatch(loginSuccess(inputs));
       console.log(inputs);
     }
   };
@@ -50,7 +58,7 @@ const Login = ({navigation}) => {
           source={require("../assets/logo.png")}
         /> */}
       </View>
-      {/* <Loader visible={loading} /> */}
+      <Loader visible={isLoading} />
       <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
         <Text style={{ color: Colors.black, fontSize: 40, fontWeight: "bold" }}>
           Log In
@@ -64,15 +72,15 @@ const Login = ({navigation}) => {
             onFocus={() => handleError(null, "email")}
             iconName="email-outline"
             label="Email"
-            placeholder="Enter your email address"
+            placeholder="Saisissez votre adresse e-mail"
             error={errors.email}
           />
           <Input
             onChangeText={(text) => handleOnchange(text, "password")}
             onFocus={() => handleError(null, "password")}
             iconName="lock-outline"
-            label="Password"
-            placeholder="Enter your password"
+            label="Mot de pass"
+            placeholder="Saisissez votre mot de passe"
             error={errors.password}
             password
           />
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    height: 150
+    height: 150,
   },
 });
 export default Login;

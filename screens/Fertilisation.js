@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import BarChartView from "../components/BarChart";
+import BarChartView from "../components/charts/BarChart";
 import { Feather } from "@expo/vector-icons";
 import PieChart from "../components/charts/PieChart";
 import Colors from "../constants/Colors";
-// import AddNew from "../components/addNew";
 import { ScrollView } from "react-native-gesture-handler";
+import AddNew from "../components/AddNew";
 const Fertilisation = ({ navigation }) => {
   const data = [
     { value: 241, color: "#264653" },
@@ -19,11 +19,11 @@ const Fertilisation = ({ navigation }) => {
 
   return (
     <View
-      className="flex-1"
+      className="flex-1 pt-2"
       style={{ backfaceVisibility: Colors.backgroundColor }}
     >
-      {/* <AddNew /> */}
-      <ScrollView horizontal>
+      <AddNew/>
+      <ScrollView horizontal className='ml-2'>
         <BarChartView color={"#2DA779"} />
         <View className="flex-row items-center justify-between p-2 mx-2 bg-white rounded-lg 6">
             <PieChart data={data} />

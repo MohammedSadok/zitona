@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import BarChartView from "../components/BarChart";
+import BarChartView from "../components/charts/BarChart";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-// import AddNew from "../components/addNew";
+import AddNew from "../components/AddNew";
 const Arrosage = ({ navigation }) => {
   const data = [
     { value: 241, color: "#283618" },
@@ -17,7 +17,7 @@ const Arrosage = ({ navigation }) => {
       className="flex-1 bg-white"
       style={{ backgroundColor: Colors.backgroundColor }}
     >
-      {/* <AddNew /> */}
+      <AddNew/>
 
       <View className="mx-auto my-2">
         <BarChartView color={Colors.blue} />

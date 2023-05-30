@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Colors from "../../constants/Colors";
-import Input from "../../components/Input";
+import Input from "../../components/general/Input";
 
 const PasswordScreen = ({ navigation }) => {
   const [inputs, setInputs] = React.useState({

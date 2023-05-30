@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Modal,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Modal, TouchableOpacity } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -22,36 +15,26 @@ const ModalPopUp = ({ isVisible, setIsVisible, children, title }) => {
     return null;
   }
   return (
-    <Modal
-      animationType={"fade"}
-      transparent={true}
-      visible={isVisible}
-      style={styles.modal}
-    >
-      <View style={styles.modal} className="p-3 m-auto bg-white rounded-xl">
-        <View className="flex-row items-center justify-between mb-2">
-          <Text className="text-2xl" style={{ fontFamily: "Mulish_700Bold" }}>
-            {title}
-          </Text>
-          <TouchableOpacity onPress={setIsVisible}>
-            <AntDesign name="close" size={32} color="gray" />
-          </TouchableOpacity>
-        </View>
-        {children}
+    isVisible && (
+      <View className="absolute z-10 justify-center w-screen h-screen bg-black opacity-50">
+        <Modal animationType={"fade"} transparent={true} visible={isVisible}>
+          <View className="p-3 m-auto bg-white rounded-xl">
+            <View className="flex-row items-center justify-between mb-2">
+              <Text
+                className="text-2xl"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                {title}
+              </Text>
+              <TouchableOpacity onPress={setIsVisible}>
+                <AntDesign name="close" size={32} color="gray" />
+              </TouchableOpacity>
+            </View>
+            {children}
+          </View>
+        </Modal>
       </View>
-    </Modal>
+    )
   );
 };
-const styles = StyleSheet.create({
-  modal: {
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 18,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 20.0,
-    elevation: 24,
-  },
-});
 export default ModalPopUp;
