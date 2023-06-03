@@ -27,7 +27,9 @@ const Input = ({
   }
   return (
     <View style={{ marginBottom: iconName ? 20 : 5 }}>
-      <Text style={style.label}>{label}</Text>
+      <Text style={[style.label, { marginVertical: iconName ? 5 : 2 }]}>
+        {label}
+      </Text>
       <View
         style={[
           style.inputContainer,
@@ -38,6 +40,7 @@ const Input = ({
               ? Colors.green
               : Colors.light,
             alignItems: "center",
+            height : iconName ? 55 : 45,
           },
         ]}
       >
@@ -76,13 +79,11 @@ const Input = ({
 
 const style = StyleSheet.create({
   label: {
-    marginVertical: 5,
     fontSize: 14,
     color: Colors.black,
     fontFamily: "Mulish_400Regular",
   },
   inputContainer: {
-    height: 55,
     backgroundColor: Colors.light,
     flexDirection: "row",
     paddingHorizontal: 10,

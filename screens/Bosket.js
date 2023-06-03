@@ -1,22 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigate from "../components/Navigate";
 import Colors from "../constants/Colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import BarChartView from "../components/charts/BarChart";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import ModalPopUp from "../components/modals/ModalPopUp";
+import Icon, { Icons } from "../components/general/Icons";
+import Task from "../components/Task";
 const slides = {
   fertilisation: require("../assets/navigation/fertiliser.png"),
   arrosage: require("../assets/navigation/arrosage.png"),
@@ -26,11 +15,10 @@ const slides = {
 const Bosket = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState({ add: false, update: false });
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
-      >
-        <ModalPopUp
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
+    >
+      {/* <ModalPopUp
           isVisible={isVisible.add}
           setIsVisible={() => setIsVisible({ ...isVisible, add: false })}
         >
@@ -41,121 +29,109 @@ const Bosket = ({ navigation }) => {
           setIsVisible={() => setIsVisible({ ...isVisible, update: false })}
         >
           <Text className="w-56">Modifier</Text>
-        </ModalPopUp>
-        <View className="flex-row items-center justify-between h-20 p-2 px-4">
-          <View className="flex-row items-center space-x-3">
-            <Image
-              className="w-16"
-              resizeMode="center"
-              source={require("../assets/profile/user.png")}
-            />
-            <View>
-              <Text>Sadok</Text>
-              <Text>Mohammed</Text>
-            </View>
+        </ModalPopUp> */}
+      <View className="flex-row items-center justify-between h-20 p-2 px-4">
+        <View className="flex-row items-center space-x-3">
+          <Image
+            className="w-16"
+            resizeMode="center"
+            source={require("../assets/profile/user.png")}
+          />
+          <View>
+            <Text>Sadok</Text>
+            <Text>Mohammed</Text>
           </View>
-          <Ionicons
-            name="notifications-outline"
-            size={24}
-            color={Colors.black}
-          />
         </View>
-        <Text className="ml-3 font-bold underline ">Tools</Text>
-        <View
-          horizontal
-          className="flex-row items-center justify-around py-2"
-          style={styles.scrollable}
-        >
-          <Navigate
-            title="Fertilisation"
-            navigation={navigation}
-            img={slides.fertilisation}
-          />
-          <Navigate
-            title="Arrosage"
-            navigation={navigation}
-            img={slides.arrosage}
-          />
-          <Navigate
-            title="Maladie"
-            navigation={navigation}
-            img={slides.maladie}
-          />
-          <Navigate
-            title="Recolt"
-            navigation={navigation}
-            img={slides.recolt}
-          />
-        </View>
-        <ScrollView>
-          <View
-            className="mx-2 bg-white rounded-lg"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
+        <Ionicons name="notifications-outline" size={24} color={Colors.black} />
+      </View>
+      <Text className="ml-3 font-bold underline ">Tools</Text>
+      <View
+        horizontal
+        className="flex-row items-center justify-around py-1"
+        style={styles.scrollable}
+      >
+        <Navigate
+          title="Fertilisation"
+          navigation={navigation}
+          img={slides.fertilisation}
+        />
+        <Navigate
+          title="Maladie"
+          navigation={navigation}
+          img={slides.maladie}
+        />
+        <Navigate title="Recolt" navigation={navigation} img={slides.recolt} />
+        <Navigate title="NewTask" navigation={navigation} add={true} />
+      </View>
 
-              elevation: 1,
-            }}
-          >
-            <BarChartView color={Colors.green} />
+      <View
+        className="flex-col justify-between p-2 pb-0 m-2 bg-white rounded-md"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.18,
+          shadowRadius: 1.0,
+
+          elevation: 1,
+        }}
+      >
+        <Text className="text-lg font-bold">About</Text>
+        <Text style={{ fontFamily: "Mulish_400Regular" }}>
+          des information generale sur le bosquet localisation ...des
+          information generale sur le bosquet localisation ...
+        </Text>
+        <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#606C38"}
+              name={"tree"}
+              type={Icons.FontAwesome5}
+              size={30}
+            />
+            <Text style={styles.text}>arbre d'olivier</Text>
+            <Text style={styles.textBold}>15</Text>
           </View>
-          <View className="flex-col justify-between p-3 m-2 bg-white rounded-md">
-            <Text className="text-lg font-bold">About</Text>
-            <Text className="">
-              des information generale sur le bosquet localisation ...des
-              information generale sur le bosquet localisation ...
-            </Text>
-            <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
-              <View className="flex-col items-center justify-between space-y-1">
-                <FontAwesome5 name="tree" size={30} color="#606C38" />
-                <Text className="">arbre d'olivier</Text>
-                <Text className="">15</Text>
-              </View>
-              <View className="flex-col items-center justify-between space-y-1">
-                <Ionicons name="water-sharp" size={30} color="#228BB8" />
-                <Text className="">arrosage</Text>
-                <Text className="">3 m3</Text>
-              </View>
-              <View className="flex-col items-center justify-between space-y-1">
-                <MaterialCommunityIcons
-                  name="fruit-cherries"
-                  size={30}
-                  color="#7A5E7E"
-                />
-                <Text className="">la récolte</Text>
-                <Text className="">100 kg</Text>
-              </View>
-            </View>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#228BB8"}
+              name={"water-sharp"}
+              type={Icons.Ionicons}
+              size={30}
+            />
+            <Text style={styles.text}>arrosage</Text>
+            <Text style={styles.textBold}>3 m3</Text>
           </View>
-          <View
-            className="flex-row items-center justify-around w-full"
-            style={{
-              marginTop: Dimensions.get("screen").height > 700 ? "5%" : 0,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => setIsVisible({ ...isVisible, add: true })}
-              className="px-12 py-3 rounded-lg bg-slate-200"
-              style={{ backgroundColor: "#76B39C" }}
-            >
-              <Text className="text-lg font-bold text-white">Ajouter</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setIsVisible({ ...isVisible, update: true })}
-              className="px-12 py-3 rounded-lg bg-slate-200"
-              style={{ backgroundColor: "#7A5E7E" }}
-            >
-              <Text className="text-lg font-bold text-white">Modifier</Text>
-            </TouchableOpacity>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#228BB8"}
+              name={"fruit-cherries"}
+              type={Icons.MaterialCommunityIcons}
+              size={30}
+            />
+            <Text style={styles.text}>la récolte</Text>
+            <Text style={styles.textBold}>100 kg</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+        </View>
+      </View>
+      <View className="flex-row items-center justify-between mx-3 my-1">
+        <Text className="text-xl font-bold">Tâches</Text>
+        <Icon
+          color={"black"}
+          name={"tasks"}
+          type={Icons.FontAwesome5}
+          size={24}
+        />
+      </View>
+      <ScrollView>
+        <Task done={true} />
+        <Task done={false} />
+        <Task done={false} />
+        <Task done={true} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -164,5 +140,11 @@ export default Bosket;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  text: {
+    fontFamily: "Mulish_400Regular",
+  },
+  textBold: {
+    fontFamily: "Mulish_700Bold",
   },
 });

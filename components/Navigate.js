@@ -1,7 +1,7 @@
-import { Text, TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import React from "react";
-
-const Navigate = ({ title, img, navigation }) => {
+import Icon, { Icons } from "./general/Icons";
+const Navigate = ({ title, img, navigation, add }) => {
   return (
     <TouchableOpacity
       className="flex-row items-center px-2 py-1 mx-2 space-x-1 rounded-md bg-slate-100 h-14"
@@ -18,7 +18,16 @@ const Navigate = ({ title, img, navigation }) => {
         elevation: 2,
       }}
     >
-      <Image className="w-12 h-12" source={img} resizeMode={"contain"} />
+      {add ? (
+        <Icon
+          name={"ios-add-circle-outline"}
+          type={Icons.Ionicons}
+          color={"black"}
+          size={38}
+        />
+      ) : (
+        <Image className="w-12 h-12" source={img} resizeMode={"contain"} />
+      )}
     </TouchableOpacity>
   );
 };

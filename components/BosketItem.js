@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useState } from "react";
 import Icon, { Icons } from "./general/Icons";
 import { SelectParseil, deleteParseil } from "../redux/parseilSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Colors from "../constants/Colors";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import {
@@ -29,6 +29,7 @@ const BosketItem = ({
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
   const dispatch = useDispatch();
+  
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -40,10 +41,12 @@ const BosketItem = ({
     <TouchableOpacity
       className="flex-row mb-2 overflow-hidden bg-white border-4 rounded-lg"
       style={[styles.container, { borderColor: backgroundColor }]}
-      onPress={() => dispatch(SelectParseil(id))}
+      onPress={() => {
+        dispatch(SelectParseil(id));
+      }}
     >
       <View className="flex-col justify-between w-4/6 px-2 pb-2">
-        <Text style={{ fontFamily: "Mulish_700Bold" }} className="h-8 text-2xl">
+        <Text style={{ fontFamily: "Mulish_700Bold" }} className="h-6 text-xl">
           {title}
         </Text>
         <View className="flex-row items-baseline justify-between">

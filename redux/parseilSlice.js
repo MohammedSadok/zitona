@@ -5,7 +5,7 @@ const initialState = {
   parseils: [],
   loading: false,
   error: null,
-  parseil: 1,
+  parseil: null,
 };
 
 const URL = "http://192.168.1.103:3000/parseils";
@@ -30,7 +30,7 @@ export const deleteParseil = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       // Make a DELETE request to the server with the specified ID
-      const response = await axios.delete(URL+`/${id}`);
+      const response = await axios.delete(URL + `/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -38,6 +38,33 @@ export const deleteParseil = createAsyncThunk(
   }
 );
 
+export const createParseil = createAsyncThunk(
+  "parseils/createParseil",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      // Make a POST request to the server with the provided data
+      const response = await axios.post(URL, data);
+      return response.data; // Return the created parseil object or any relevant data
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateParseil = createAsyncThunk(
+  "parseils/updateParseil",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      // Make a PATCH request to the server with the provided data
+      const response = await axios.patch(`${URL}/${data.id}`, data);
+      return response.data; // Return the updated parseil object or any relevant data
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const parseilSlice = createSlice({
   name: "parseils",
   initialState,
@@ -62,12 +89,45 @@ const parseilSlice = createSlice({
         state.error = action.payload;
       })
 
+      // Create parseil
+      .addCase(createParseil.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createParseil.fulfilled, (state, action) => {
+        state.loading = false;
+        state.parseils.push(action.payload);
+      })
+      .addCase(createParseil.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Create parseil
+      .addCase(updateParseil.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateParseil.fulfilled, (state, action) => {
+        state.loading = false;
+        state.parseils = state.parseils.map((element) => {
+          return element.id === action.payload.id
+            ? { ...element, ...action.payload }
+            : element;
+        });
+      })
+      .addCase(updateParseil.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       // Delete parseil
       .addCase(deleteParseil.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(deleteParseil.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.loading = false;
         // Update the parseils state by removing the deleted parseil
         state.parseils = state.parseils.filter(

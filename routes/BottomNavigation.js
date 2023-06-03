@@ -1,6 +1,5 @@
 import Colors from "../constants/Colors";
 import BosketNavigation from "./BosketNavigation";
-import Home from "../screens/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ProfileNavigation from "./ProfileNavigation";
@@ -11,13 +10,6 @@ import {
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 const TabArr = [
-  {
-    route: "Home",
-    label: "Home",
-    type: Icons.Entypo,
-    icon: "home",
-    component: Home,
-  },
   {
     route: "BosketNavigation",
     label: "Bosket",

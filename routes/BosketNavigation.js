@@ -1,8 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Arrosage from "../screens/Arrosage";
+import Recolt from "../screens/Recolt";
 import Fertilisation from "../screens/Fertilisation";
 import Maladie from "../screens/Maladie";
-import Recolt from "../screens/Recolt";
+import NewTask from "../screens/NewTask";
 import Bosket from "../screens/Bosket";
 import {
   useFonts,
@@ -24,7 +24,7 @@ const BosketNavigation = () => {
       initialRouteName="Bosket"
       screenOptions={{
         headerTitleAlign: "center",
-        headerTitleStyle: {      
+        headerTitleStyle: {
           fontFamily: "Mulish_700Bold",
           letterSpacing: 1,
           fontSize: 24,
@@ -36,10 +36,14 @@ const BosketNavigation = () => {
         component={Bosket}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Arrosage" component={Arrosage} />
+      <Stack.Screen name="Recolt" component={Recolt} />
       <Stack.Screen name="Fertilisation" component={Fertilisation} />
       <Stack.Screen name="Maladie" component={Maladie} />
-      <Stack.Screen name="Recolt" component={Recolt} />
+      <Stack.Screen
+        name="NewTask"
+        component={NewTask}
+        options={{ title: "Nouvelle Tache" }}
+      />
     </Stack.Navigator>
   );
 };

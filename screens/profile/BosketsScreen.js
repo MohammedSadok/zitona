@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
 import React from "react";
 import Colors from "../../constants/Colors";
 import ModalDeleteParSeil from "../../components/modals/ModalDeleteParseil";
@@ -12,7 +12,7 @@ import {
 import BosketItem from "../../components/BosketItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchParseils, deleteParseil } from "../../redux/parseilSlice";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 const BosketsScreen = () => {
   var randomImages = [
     require("../../assets/background-parseil/0.png"),
@@ -52,9 +52,19 @@ const BosketsScreen = () => {
         debit={item.debit}
         localisation={item.localisation}
         backgroundColor={backgroundColor}
-        toggleModalDelete={() =>
-          setItem((prev) => ({ ...prev, isVisibleDelete: true, id: item.id }))
-        }
+        toggleModalDelete={() => {
+          if (item.id === parseil) {
+            Alert.alert(
+              "Error",
+              "Vous ne pouvez pas supprimer un Parseil sélectionné"
+            );
+          } else
+            setItem((prev) => ({
+              ...prev,
+              isVisibleDelete: true,
+              id: item.id,
+            }));
+        }}
         toggleModalUpdate={() =>
           setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }))
         }
@@ -72,7 +82,7 @@ const BosketsScreen = () => {
   }
   return (
     <View
-      style={{ backgroundColor: Colors.backgroundColor, flex: 1 }}
+      style={{ backgroundColor: Colors.backgroundColor, flex: 1,paddingTop: parseil ? 0 : "8%"}}
       className="p-2 px-3"
     >
       <ModalDeleteParSeil
@@ -84,10 +94,10 @@ const BosketsScreen = () => {
         }}
       />
       <ModalAddBosket
+        id={item.id}
         isVisible={item.isVisibleAdd}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleAdd: false }))}
         ok={() => {
-          //dispatch add action
           setItem((prev) => ({ ...prev, isVisibleAdd: false }));
         }}
       />
@@ -102,8 +112,9 @@ const BosketsScreen = () => {
         <Text className="text-base">10022 Arbre</Text>
       </View>
       <TouchableOpacity
-      onPress={() =>
-        setItem((prev) => ({ ...prev, isVisibleAdd: true}))}
+        onPress={() =>
+          setItem((prev) => ({ ...prev, isVisibleAdd: true, id: 0 }))
+        }
         style={{
           shadowColor: "#000",
           shadowOffset: {
@@ -123,7 +134,7 @@ const BosketsScreen = () => {
           color={Colors.white}
           size={26}
         />
-        <Text className="ml-6 text-lg font-bold">Creer un bosket</Text>
+        <Text className="ml-6 text-lg font-bold">Créer un nouveau parseil</Text>
       </TouchableOpacity>
       <FlatList
         data={parseils}

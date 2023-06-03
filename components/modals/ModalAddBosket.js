@@ -1,35 +1,89 @@
 import {
   View,
   Text,
-  Button,
+  ScrollView,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Keyboard,
 } from "react-native";
-const { width } = Dimensions.get("window");
+import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModalPopUp from "./ModalPopUp";
 import Colors from "../../constants/Colors";
 import SelectDropdown from "react-native-select-dropdown";
 import Input from "../general/Input";
-const countries = ["Egypt", "Canada", "Australia", "Ireland"];
-const ModalAddBosket = ({ isVisible, ok, cancel }) => {
+import Icon, { Icons } from "../general/Icons";
+import {
+  useFonts,
+  Mulish_400Regular,
+  Mulish_700Bold,
+} from "@expo-google-fonts/mulish";
+import { useDispatch, useSelector } from "react-redux";
+import { createParseil, updateParseil } from "../../redux/parseilSlice";
+
+const width = Dimensions.get("screen").width;
+const oliveVarieties = [
+  "Picholine",
+  "Haouzia",
+  "Menara",
+  "Dahbia",
+  "Moroccan Picholine",
+  "Meski",
+  "Touhami",
+  "Mozafati",
+  "Moroccan Amfissa",
+];
+
+const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
+  const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
-    firstName: "",
-    lastName: "",
+    id: 50,
+    title: "",
+    nombreDarbre: 0,
+    varieter: "Picholine",
+    date_de_plantations: "",
+    type_darossage: "",
+    debit: 0,
+    localisation: "",
   });
+  const [isSelected, setSelection] = useState(false);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const parseil = useSelector((state) =>
+    state.parseils.parseils.find((element) => element.id === id)
+  );
+  useEffect(() => {
+    if (parseil && id !== 0) {
+      setInputs(parseil);
+      if (parseil.type_darossage !== "") {
+        setSelection(true);
+        setDate(new Date(inputs.date_de_plantations));
+      }
+    } else {
+      setInputs({
+        id: 5,
+        title: "",
+        nombreDarbre: 0,
+        varieter: "Picholine",
+        date_de_plantations: new Date(),
+        type_darossage: "",
+        debit: 0,
+        localisation: "",
+      });
+      setDate(new Date());
+      setSelection(false);
+    }
+  }, [id]);
+
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
-    console.log(formatDate(currentDate));
   };
 
   const showDatePickerHandler = () => {
@@ -50,70 +104,77 @@ const ModalAddBosket = ({ isVisible, ok, cancel }) => {
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
-    if (!inputs.firstName) {
-      handleError("Please input firstName", "firstName");
+    if (!inputs.title) {
+      handleError("Entrer le titre", "title");
       isValid = false;
     }
-    if (!inputs.lastName) {
-      handleError("Please input lastName", "lastName");
+    if (!inputs.nombreDarbre) {
+      handleError("Entrer le nombre d'arbre", "nombreDarbre");
+      isValid = false;
+    }
+    if (!inputs.localisation) {
+      handleError("Entrer localisation", "localisation");
+      isValid = false;
+    }
+    if (!inputs.debit && isSelected) {
+      handleError("Entrer le Debit d'arossage", "debit");
       isValid = false;
     }
     if (isValid) {
-      // register();
-      console.log(inputs);
+      if (parseil) {
+        inputs.date_de_plantations = formatDate(date);
+        dispatch(updateParseil(inputs));
+        ok();
+      } else {
+        inputs.type_darossage = "goute a goutte";
+        inputs.date_de_plantations = formatDate(date);
+        dispatch(createParseil(inputs));
+        ok();
+      }
     }
   };
+  const [loaded] = useFonts({
+    Mulish_400Regular,
+    Mulish_700Bold,
+  });
+  if (!loaded) {
+    return null;
+  }
   return (
     <ModalPopUp
       isVisible={isVisible}
       setIsVisible={cancel}
-      title="Creer un Parseil"
+      title="Créer un Parseil"
+      className="w-11/12"
     >
-      <View className="w-11/12 px-3 h-5/6">
-        {/* <Text className="">Vouler vous vraiement quitter l'application</Text> */}
-        {/* <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
-          <TouchableOpacity
-            className="px-6 py-2.5 bg-red-600 rounded-md"
-            onPress={ok}
-          >
-            <Text
-              className="text-xl text-white"
-              style={{ fontFamily: "Mulish_700Bold" }}
-            >
-              Oui
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="px-6 py-2.5 bg-slate-300 rounded-md"
-            onPress={cancel}
-          >
-            <Text className="text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
-              Annuler
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-        <View style={{ marginVertical: 20 }} className="w-72">
+      <ScrollView className="px-1">
+        <View className="w-full">
           <Input
-            onChangeText={(text) => handleOnchange(text, "firstName")}
-            onFocus={() => handleError(null, "firstName")}
-            label="Prénom"
-            placeholder="Entrer votre prénom"
-            error={errors.firstName}
+            onChangeText={(text) => handleOnchange(text, "title")}
+            onFocus={() => handleError(null, "title")}
+            label="Titre"
+            placeholder="Entrer un titre "
+            error={errors.title}
+            value={inputs.title + ""}
           />
           <Input
-            onChangeText={(text) => handleOnchange(text, "lastName")}
-            onFocus={() => handleError(null, "lastName")}
-            label="Nom"
-            placeholder="Entrer votre nom"
-            error={errors.firstName}
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnchange(text, "nombreDarbre")}
+            onFocus={() => handleError(null, "nombreDarbre")}
+            label="Nombre d'arbre"
+            placeholder="0"
+            error={errors.nombreDarbre}
+            value={inputs.nombreDarbre + ""}
           />
-          <Text className="my-2">Varieter</Text>
+          <Text className="mb-2">Varieter</Text>
           <SelectDropdown
-            data={countries}
-            // defaultValueByIndex={1}
-            // defaultValue={'England'}
+            data={oliveVarieties}
+            defaultValue={inputs.varieter + ""}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
+              setInputs((prevState) => ({
+                ...prevState,
+                varieter: selectedItem,
+              }));
             }}
             defaultButtonText={"Sélectionner la variété"}
             buttonTextAfterSelection={(selectedItem, index) => {
@@ -128,7 +189,7 @@ const ModalAddBosket = ({ isVisible, ok, cancel }) => {
               return (
                 <FontAwesome
                   name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={"#FFF"}
+                  color={Colors.black}
                   size={18}
                 />
               );
@@ -138,7 +199,25 @@ const ModalAddBosket = ({ isVisible, ok, cancel }) => {
             rowStyle={styles.dropdown2RowStyle}
             rowTextStyle={styles.dropdown2RowTxtStyle}
           />
-          <Button title="Select Date" onPress={showDatePickerHandler} />
+          <Text className="my-2">Date de Plantation</Text>
+          <TouchableOpacity
+            className="flex-row items-center justify-between p-2 border-black rounded-md"
+            style={{ borderWidth: 0.5 }}
+            onPress={showDatePickerHandler}
+          >
+            <Text
+              style={{ fontFamily: "Mulish_700Bold", color: Colors.green }}
+              className="m-auto text-lg"
+            >
+              {formatDate(date)}
+            </Text>
+            <Icon
+              color={Colors.black}
+              name={"date"}
+              type={Icons.Fontisto}
+              size={26}
+            />
+          </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
               value={date}
@@ -146,30 +225,67 @@ const ModalAddBosket = ({ isVisible, ok, cancel }) => {
               onChange={handleDateChange}
             />
           )}
-          <Text>{formatDate(date)}</Text>
-          {/* <RNDateTimePicker mode="date" value={new Date()}/> */}
-          {/* 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("MailAndPhoneScreen")}
-            className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
-            style={{ backgroundColor: Colors.green }}
-          >
-            <Text className="text-xl font-bold text-white text-c">Suivant</Text>
-          </TouchableOpacity> */}
-
-          {/* <Text
-            onPress={() => navigation.navigate("Login")}
-            style={{
-              color: Colors.black,
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 16,
-            }}
-          >
-            Already have account ?Login
-          </Text> */}
+          <View className="flex-row items-center my-2">
+            <Checkbox
+              className="w-6 h-6 rounded-md"
+              value={isSelected}
+              onValueChange={setSelection}
+              color={isSelected ? Colors.green : undefined}
+            />
+            <Text
+              className="ml-2 text-lg"
+              style={{ fontFamily: "Mulish_700Bold" }}
+            >
+              L 'arossage?
+            </Text>
+          </View>
+          {isSelected && (
+            <Input
+              keyboardType="numeric"
+              onChangeText={(text) => handleOnchange(text, "debit")}
+              onFocus={() => handleError(null, "debit")}
+              label="Debit"
+              placeholder="0.00"
+              error={errors.debit}
+              value={inputs.debit + ""}
+            />
+          )}
+          <Input
+            onChangeText={(text) => handleOnchange(text, "localisation")}
+            onFocus={() => handleError(null, "localisation")}
+            label="Adresse"
+            placeholder="Adresse du parseil d'oliviers ..."
+            error={errors.localisation}
+            value={inputs.localisation}
+          />
+          <View className="flex-row-reverse">
+            <TouchableOpacity
+              onPress={validate}
+              className="flex-row items-center justify-center px-4 my-3 rounded-lg"
+              style={{ backgroundColor: Colors.blue }}
+            >
+              <Text
+                className="text-lg text-white"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Enregistrer
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={cancel}
+              className="flex-row items-center justify-center px-4 py-3 my-3 mr-3 rounded-lg"
+              style={{ backgroundColor: Colors.red }}
+            >
+              <Text
+                className="text-lg text-white"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Annuler
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </ModalPopUp>
   );
 };
@@ -178,27 +294,30 @@ export default ModalAddBosket;
 
 const styles = StyleSheet.create({
   dropdown2BtnStyle: {
-    width: "100%",
-    height: 50,
-    backgroundColor: Colors.blue,
+    width: width * 0.85,
+    height: 45,
+    backgroundColor: Colors.white,
     borderRadius: 8,
+    borderColor: Colors.black,
+    borderWidth: 0.5,
   },
   dropdown2BtnTxtStyle: {
-    color: Colors.white,
+    color: Colors.green,
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: "Mulish_700Bold",
+    fontSize: 18,
   },
   dropdown2DropdownStyle: {
-    backgroundColor: Colors.blue,
     borderRadius: 12,
   },
   dropdown2RowStyle: {
     backgroundColor: Colors.white,
-    borderBottomColor: Colors.blue,
+    borderBottomColor: Colors.black,
   },
   dropdown2RowTxtStyle: {
-    color: Colors.blue,
+    color: Colors.black,
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: "Mulish_700Bold",
+    fontSize: 18,
   },
 });
