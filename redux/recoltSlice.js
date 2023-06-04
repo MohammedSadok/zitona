@@ -2,15 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  malades: [],
+  recolts: [],
   loading: false,
   error: null,
 };
 
-const URL = "http://192.168.1.103:3000/malades";
+const URL = "http://192.168.1.103:3000/recolts";
 
-export const fetchMalades = createAsyncThunk(
-  "malades/fetchMalades",
+export const fetchRecolts = createAsyncThunk(
+  "recolts/fetchRecolts",
   async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
@@ -23,21 +23,8 @@ export const fetchMalades = createAsyncThunk(
   }
 );
 
-export const getMalade = createAsyncThunk(
-  "malades/getMalade",
-  async (id, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
-    try {
-      const response = await axios.get(`${URL}/${id}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteMalade = createAsyncThunk(
-  "malades/deleteMalade",
+export const deleteRecolt = createAsyncThunk(
+  "recolts/deleteRecolt",
   async (id, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
@@ -49,8 +36,8 @@ export const deleteMalade = createAsyncThunk(
   }
 );
 
-export const createMalade = createAsyncThunk(
-  "malades/createMalade",
+export const createRecolt = createAsyncThunk(
+  "recolts/createRecolt",
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
@@ -62,8 +49,8 @@ export const createMalade = createAsyncThunk(
   }
 );
 
-export const updateMalade = createAsyncThunk(
-  "malades/updateMalade",
+export const updateRecolt = createAsyncThunk(
+  "recolts/updateRecolt",
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
@@ -75,82 +62,65 @@ export const updateMalade = createAsyncThunk(
   }
 );
 
-const maladeSlice = createSlice({
-  name: "malades",
+const recoltSlice = createSlice({
+  name: "recolts",
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMalades.pending, (state) => {
+      .addCase(fetchRecolts.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMalades.fulfilled, (state, action) => {
+      .addCase(fetchRecolts.fulfilled, (state, action) => {
         state.loading = false;
-        state.malades = action.payload;
+        state.recolts = action.payload;
       })
-      .addCase(fetchMalades.rejected, (state, action) => {
+      .addCase(fetchRecolts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      //
-      .addCase(createMalade.pending, (state) => {
+      .addCase(createRecolt.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createMalade.fulfilled, (state, action) => {
+      .addCase(createRecolt.fulfilled, (state, action) => {
         state.loading = false;
-        state.malades.push(action.payload);
+        state.recolts.push(action.payload);
       })
-      .addCase(createMalade.rejected, (state, action) => {
+      .addCase(createRecolt.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      //
-      .addCase(getMalade.pending, (state) => {
+      .addCase(updateRecolt.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getMalade.fulfilled, (state, action) => {
+      .addCase(updateRecolt.fulfilled, (state, action) => {
         state.loading = false;
-        state.malades.push(action.payload);
-      })
-      .addCase(getMalade.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      //
-      .addCase(updateMalade.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateMalade.fulfilled, (state, action) => {
-        state.loading = false;
-        state.malades = state.malades.map((element) =>
+        state.recolts = state.recolts.map((element) =>
           element.id === action.payload.id
             ? { ...element, ...action.payload }
             : element
         );
       })
-      .addCase(updateMalade.rejected, (state, action) => {
+      .addCase(updateRecolt.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      //
-      .addCase(deleteMalade.pending, (state) => {
+      .addCase(deleteRecolt.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteMalade.fulfilled, (state, action) => {
+      .addCase(deleteRecolt.fulfilled, (state, action) => {
         state.loading = false;
-        state.malades = state.malades.filter(
-          (malade) => malade.id !== action.payload
+        state.recolts = state.recolts.filter(
+          (recolt) => recolt.id !== action.payload
         );
       })
-      .addCase(deleteMalade.rejected, (state, action) => {
+      .addCase(deleteRecolt.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
-
-export default maladeSlice.reducer;
+export default recoltSlice.reducer;
