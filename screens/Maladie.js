@@ -1,31 +1,27 @@
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React from "react";
-import PieChart from "../components/charts/PieChart";
 import { Feather } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import AddNew from "../components/AddNew";
 import MaladeItem from "../components/MaladeItem";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMalades } from "../redux/maladeSlice";
+import {
+  deleteMalade,
+  fetchMalades,
+  sortByDate,
+  sortByMaladie,
+  fetchListMaladie,
+} from "../redux/maladeSlice";
 import { useEffect, useState } from "react";
 import ModalAddMalade from "../components/modals/ModalAddMalade";
-import {
-  useFonts,
-  Mulish_400Regular,
-  Mulish_700Bold,
-} from "@expo-google-fonts/mulish";
+import ModalDeleteParseil from "../components/modals/ModalDeleteParseil";
+import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
+import Loader from "../components/general/Loader";
 const Maladie = ({ navigation }) => {
-  const data = [
-    { value: 241, color: "#283618" },
-    { value: 372, color: "#606C38" },
-    { value: 188, color: "#DDA15E" },
-    { value: 100, color: "#BC6C25" },
-  ];
-
   const dispatch = useDispatch();
   const { malades, loading, error } = useSelector((state) => state.malades);
-
+  const { parcelle } = useSelector((state) => state.parcelles);
+  const [visible, setVisible] = useState(false);
   const [item, setItem] = useState({
     isVisibleDelete: false,
     id: null,
@@ -33,30 +29,51 @@ const Maladie = ({ navigation }) => {
   });
 
   useEffect(() => {
-    dispatch(fetchMalades());
+    dispatch(fetchMalades(parcelle.id));
+    dispatch(fetchListMaladie());
   }, [dispatch]);
 
   const Items = ({ item }) => {
     return (
       <MaladeItem
-        id={item.id}
+        id={item.maladie.id}
         date={item.date}
-        maladie={item.maladie}
+        maladie={item.maladie.nom}
         commentaire={item.commentaire}
+        toggleModalUpdate={() =>
+          setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }))
+        }
+        navigation={navigation}
       />
     );
   };
   return (
     <View
-      className="flex-1 bg-white"
+      className="flex-1"
       style={{ backgroundColor: Colors.backgroundColor }}
     >
+      <Loader visible={loading} />
+      <ModalDeleteParseil
+        isVisible={item.isVisibleDelete}
+        cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
+        ok={() => {
+          dispatch(deleteMalade(item.id));
+          setItem((prev) => ({ ...prev, isVisibleDelete: false }));
+        }}
+      />
       <ModalAddMalade
         id={item.id}
         isVisible={item.isVisibleAdd}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleAdd: false }))}
         ok={() => {
           setItem((prev) => ({ ...prev, isVisibleAdd: false }));
+        }}
+        toggleModalDelete={() => {
+          setItem((prev) => ({
+            ...prev,
+            isVisibleAdd: false,
+            isVisibleDelete: true,
+          }));
         }}
       />
       <AddNew
@@ -88,10 +105,48 @@ const Maladie = ({ navigation }) => {
       </View> */}
       <View className="flex-row items-center justify-between m-3">
         <Text className="text-xl font-bold">Historique</Text>
-        <View className="flex-row items-center justify-between space-x-2">
-          <Feather name="sliders" size={24} color="black" />
-          <Text className="">Sort/Filter</Text>
-        </View>
+
+        <Menu
+          visible={visible}
+          anchor={
+            <TouchableOpacity
+              onPress={() => setVisible(true)}
+              className="flex-row items-center justify-between"
+            >
+              <Text
+                className="mr-2 text-xl"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Trier
+              </Text>
+              <Feather name="sliders" size={24} color="black" />
+            </TouchableOpacity>
+          }
+          onRequestClose={() => setVisible(false)}
+          className="w-24"
+        >
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByDate());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Date</Text>
+            </View>
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByMaladie());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Maladie</Text>
+            </View>
+          </MenuItem>
+        </Menu>
       </View>
       <FlatList
         data={malades}
@@ -101,5 +156,4 @@ const Maladie = ({ navigation }) => {
     </View>
   );
 };
-
 export default Maladie;

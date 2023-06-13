@@ -4,21 +4,26 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
+  StyleSheet,
 } from "react-native";
 import { useState } from "react";
 import Item from "../components/Item";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ModalPopUp from "../components/modals/ModalPopUp";
 import { logout } from "../services/UserService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useFonts,
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 import Colors from "../constants/Colors";
+import Icon, { Icons } from "../components/general/Icons";
 const Profile = ({ navigation }) => {
+  const { parcelles, loading, error, parcelle } = useSelector(
+    (state) => state.parcelles
+  );
+
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [loaded] = useFonts({
@@ -66,7 +71,7 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
       </ModalPopUp>
-      <View className="flex-col items-center justify-between">
+      <View className="flex-col items-center justify-center mt-2">
         <View className="w-24 h-24">
           <ImageBackground
             className="relative flex-1"
@@ -82,20 +87,64 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </ImageBackground>
         </View>
-        <Text className="my-1 text-2xl font-bold">Mohammed Sadok</Text>
+        <Text className="my-2 text-2xl font-bold">Mohammed Sadok</Text>
       </View>
       <View
-        className="w-full p-2 rounded-lg bg-slate-100 h-1/4"
+        className="flex-col justify-between w-full p-2 pb-0 bg-white rounded-md"
         style={{
-          marginVertical: Dimensions.get("screen").height > 700 ? "5%" : 0,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.18,
+          shadowRadius: 1.0,
+
+          elevation: 1,
         }}
       >
-        <Text>3 boskets</Text>
+        <Text className="text-lg font-bold">About</Text>
+        <Text style={{ fontFamily: "Mulish_400Regular" }}>
+          des information generale sur le bosquet localisation ...des
+          information generale sur le bosquet localisation ...
+        </Text>
+        <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#606C38"}
+              name={"tree"}
+              type={Icons.FontAwesome5}
+              size={30}
+            />
+            <Text style={styles.text}>arbre d'olivier</Text>
+            <Text style={styles.textBold}>15</Text>
+          </View>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#228BB8"}
+              name={"water-sharp"}
+              type={Icons.Ionicons}
+              size={30}
+            />
+            <Text style={styles.text}>arrosage</Text>
+            <Text style={styles.textBold}>3 m3</Text>
+          </View>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#228BB8"}
+              name={"fruit-cherries"}
+              type={Icons.MaterialCommunityIcons}
+              size={30}
+            />
+            <Text style={styles.text}>la récolte</Text>
+            <Text style={styles.textBold}>100 kg</Text>
+          </View>
+        </View>
       </View>
       <ScrollView className="w-full">
         <Item
-          title={"Transaction List"}
-          text={"Transactions You Have"}
+          title={"Parcelles"}
+          text={"Liste des parcelles que vous avez"}
           image={require("../assets/profile/List.png")}
           width={17}
           height={20}
@@ -103,8 +152,8 @@ const Profile = ({ navigation }) => {
           handleClick={() => navigation.navigate("Boskets")}
         />
         <Item
-          title={"Privacy"}
-          text={"Change email and password"}
+          title={"Sécurité"}
+          text={"Changer les informations personelle"}
           image={require("../assets/profile/private.png")}
           width={17}
           height={20}
@@ -112,8 +161,8 @@ const Profile = ({ navigation }) => {
           handleClick={() => navigation.navigate("Privacy")}
         />
         <Item
-          title={"Portfolio"}
-          text={"Update portfolio settings"}
+          title={"Portefeuille"}
+          text={"Liste des dépenses"}
           image={require("../assets/profile/protfolio.png")}
           width={20}
           height={18}
@@ -122,7 +171,7 @@ const Profile = ({ navigation }) => {
         />
         <Item
           title={"Notifications"}
-          text={"Change notification settings"}
+          text={"Liste des notifications"}
           image={require("../assets/profile/notification.png")}
           width={17}
           height={20}
@@ -130,8 +179,8 @@ const Profile = ({ navigation }) => {
           handleClick={() => navigation.navigate("Notifications")}
         />
         <Item
-          title={"Go out"}
-          text={"Exit the app"}
+          title={"Log out"}
+          text={"Se Déconnecté"}
           image={require("../assets/profile/logout.png")}
           width={21}
           height={21}
@@ -144,3 +193,15 @@ const Profile = ({ navigation }) => {
 };
 
 export default Profile;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  text: {
+    fontFamily: "Mulish_400Regular",
+  },
+  textBold: {
+    fontFamily: "Mulish_700Bold",
+  },
+});

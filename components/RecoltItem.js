@@ -5,7 +5,16 @@ import {
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
-const RecoltItem = ({ id, date, quantite, methode, qualite, commentaire }) => {
+const RecoltItem = ({
+  id,
+  date,
+  quantite,
+  methode,
+  qualite,
+  cout,
+  commentaire,
+  toggleModalUpdate,
+}) => {
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -27,21 +36,35 @@ const RecoltItem = ({ id, date, quantite, methode, qualite, commentaire }) => {
 
         elevation: 1,
       }}
+      onLongPress={toggleModalUpdate}
     >
       <View className="flex-row items-center justify-between">
-        <Text className="text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
-          {quantite} Kg
-        </Text>
+        <View className="flex-row items-baseline justify-center space-x-2">
+          <Text className="text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
+            {quantite} Kg
+          </Text>
+          <Text
+            className="text-base text-gray-500"
+            style={{ fontFamily: "Mulish_700Bold" }}
+          >
+            {methode}
+          </Text>
+        </View>
         <Text className="text-base" style={{ fontFamily: "Mulish_700Bold" }}>
-          {qualite} Kg
+          {qualite}
         </Text>
         <Text className="text-xs" style={{ fontFamily: "Mulish_400Regular" }}>
           {date}
         </Text>
       </View>
-      <Text className="text-sm" style={{ fontFamily: "Mulish_400Regular" }}>
-        {commentaire}
-      </Text>
+      <View className="flex-row items-baseline space-x-2">
+        <Text className="text-sm" style={{ fontFamily: "Mulish_400Regular" }}>
+          {commentaire}
+        </Text>
+        <Text className="text-xs" style={{ fontFamily: "Mulish_400Regular" }}>
+          {cout} DH
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };

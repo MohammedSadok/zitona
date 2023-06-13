@@ -22,7 +22,7 @@ import {
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 import { useDispatch, useSelector } from "react-redux";
-import { createParseil, updateParseil } from "../../redux/parseilSlice";
+import { createParcelle, updateParcelle } from "../../redux/parcelleSlice";
 
 const width = Dimensions.get("screen").width;
 const oliveVarieties = [
@@ -40,40 +40,45 @@ const oliveVarieties = [
 const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
-    id: 50,
-    title: "",
+    nom: "",
     nombreDarbre: 0,
     varieter: "Picholine",
-    date_de_plantations: "",
+    dateDePlantation: new Date(),
     type_darossage: "",
     debit: 0,
     localisation: "",
+    user: {
+      id: 1
+    }
   });
+
   const [isSelected, setSelection] = useState(false);
   const [errors, setErrors] = useState({});
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const parseil = useSelector((state) =>
-    state.parseils.parseils.find((element) => element.id === id)
+  const parcelle = useSelector((state) =>
+    state.parcelles.parcelles.find((element) => element.id === id)
   );
   useEffect(() => {
-    if (parseil && id !== 0) {
-      setInputs(parseil);
-      if (parseil.type_darossage !== "") {
+    if (parcelle && id !== 0) {
+      setInputs(parcelle);
+      if (parcelle.type_darossage !== "") {
         setSelection(true);
-        setDate(new Date(inputs.date_de_plantations));
+        setDate(new Date(inputs.dateDePlantation));
       }
     } else {
       setInputs({
-        id: 5,
-        title: "",
+        nom: "",
         nombreDarbre: 0,
         varieter: "Picholine",
-        date_de_plantations: new Date(),
+        dateDePlantation: new Date(),
         type_darossage: "",
         debit: 0,
         localisation: "",
+        user: {
+          id: 1
+        }
       });
       setDate(new Date());
       setSelection(false);
@@ -104,8 +109,8 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
-    if (!inputs.title) {
-      handleError("Entrer le titre", "title");
+    if (!inputs.nom) {
+      handleError("Entrer le titre", "nom");
       isValid = false;
     }
     if (!inputs.nombreDarbre) {
@@ -121,14 +126,14 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
       isValid = false;
     }
     if (isValid) {
-      if (parseil) {
-        inputs.date_de_plantations = formatDate(date);
-        dispatch(updateParseil(inputs));
+      if (parcelle) {
+        inputs.dateDePlantation = formatDate(date);
+        dispatch(updateParcelle(inputs));
         ok();
       } else {
         inputs.type_darossage = "goute a goutte";
-        inputs.date_de_plantations = formatDate(date);
-        dispatch(createParseil(inputs));
+        inputs.dateDePlantation = formatDate(date);
+        dispatch(createParcelle(inputs));
         ok();
       }
     }
@@ -150,12 +155,12 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
       <ScrollView className="px-1">
         <View className="w-full">
           <Input
-            onChangeText={(text) => handleOnchange(text, "title")}
-            onFocus={() => handleError(null, "title")}
+            onChangeText={(text) => handleOnchange(text, "nom")}
+            onFocus={() => handleError(null, "nom")}
             label="Titre"
             placeholder="Entrer un titre "
-            error={errors.title}
-            value={inputs.title + ""}
+            error={errors.nom}
+            value={inputs.nom + ""}
           />
           <Input
             keyboardType="numeric"

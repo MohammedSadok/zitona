@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useState } from "react";
 import Icon, { Icons } from "./general/Icons";
-import { SelectParseil, deleteParseil } from "../redux/parseilSlice";
+import { SelectParcelle } from "../redux/parcelleSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Colors from "../constants/Colors";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
@@ -29,7 +29,7 @@ const BosketItem = ({
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
   const dispatch = useDispatch();
-  
+
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -42,7 +42,17 @@ const BosketItem = ({
       className="flex-row mb-2 overflow-hidden bg-white border-4 rounded-lg"
       style={[styles.container, { borderColor: backgroundColor }]}
       onPress={() => {
-        dispatch(SelectParseil(id));
+        dispatch(
+          SelectParcelle({
+            id,
+            title,
+            nombreDarbre,
+            varieter,
+            date_de_plantations,
+            debit,
+            localisation,
+          })
+        );
       }}
     >
       <View className="flex-col justify-between w-4/6 px-2 pb-2">

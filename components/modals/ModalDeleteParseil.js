@@ -3,9 +3,9 @@ import React from "react";
 import ModalPopUp from "./ModalPopUp";
 const ModalDeleteParseil = ({ isVisible, ok, cancel }) => {
   return (
-    <ModalPopUp isVisible={isVisible} setIsVisible={cancel} title="Quiter">
-      <View className="w-4/6 px-3">
-        <Text className="">Vouler vous vraiement quitter l'application</Text>
+    <ModalPopUp isVisible={isVisible} setIsVisible={cancel} title="Supprimer">
+      <View className="">
+        <Text className="">Vouler vous vraiement supprimer</Text>
         <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
           <TouchableOpacity
             className="px-6 py-2.5 bg-red-600 rounded-md"

@@ -8,14 +8,14 @@ const MainNavigation = () => {
   const isAuthenticated = useSelector(
     (state) => state.userAuth.isAuthenticated
   );
-  const { parseil } = useSelector((state) => state.parseils);
+  const { parcelle } = useSelector((state) => state.parcelles);
   const dispatch = useDispatch();
 
   // useEffect(() => {
   //   dispatch(checkLoggedInUser());
   // }, [dispatch]);
   if (isAuthenticated) {
-    if (parseil === null) {
+    if (parcelle.id === 0) {
       return <BosketsScreen />;
     } else return <BottomNavigation />;
   } else return <LoginNavigation />;

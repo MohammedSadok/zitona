@@ -7,7 +7,6 @@ import {
   Dimensions,
   Keyboard,
 } from "react-native";
-import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState, useEffect } from "react";
@@ -22,52 +21,62 @@ import {
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 import { useDispatch, useSelector } from "react-redux";
-import { createMalade, updateMalade } from "../../redux/maladeSlice";
+import { createRecolt, updateRecolt } from "../../redux/recoltSlice";
 const width = Dimensions.get("screen").width;
+var methodesRecolte = [
+  "Manuelle",
+  "Mécanique",
+  "Combinée",
+  "À peigne",
+  "À secouage manuel",
+  "À secouage pneumatique",
+];
 
-const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
+const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const dispatch = useDispatch();
-  const  parcelle  = useSelector((state) => state.parcelles.parcelle);
+  const [inputs, setInputs] = useState({
+    date: new Date(),
+    commentaire: null,
+    quantite: "",
+    methode: "",
+    qualite: "Vierge",
+    cout: "",
+    parcelle: {
+      id: parcelle.id,
+    },
+  });
+
   const [errors, setErrors] = useState({});
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const malade = useSelector((state) =>
-    state.malades.malades.find((element) => element.id === id)
+  const recolt = useSelector((state) =>
+    state.recolts.recolts.find((element) => element.id === id)
   );
-  const listMaladies = useSelector((state) => state.malades.listMaladies);
-  const [inputs, setInputs] = useState({
-    date: new Date(),
-    commentaire: null,
-    maladie: {
-      nom: "",
-    },
-    parcelle: {
-      id: parcelle.id,
-    }
-  });
 
-
+  const { parcelle } = useSelector(
+    (state) => state.parcelles
+    );
   useEffect(() => {
-    if (malade && id !== 0) {
-      setInputs(malade);
+    if (recolt && id !== 0) {
+      setInputs(recolt);
       setDate(new Date(inputs.date));
     } else {
       setInputs({
         date: new Date(),
-        commentaire: "",
-        maladie: {
-          nom: "",
-        },
+        commentaire: null,
+        quantite: "",
+        methode: "",
+        qualite: "Vierge",
+        cout: "",
         parcelle: {
           id: parcelle.id,
-        }
+        },
       });
       setErrors({});
       setDate(new Date());
     }
   }, [id, isVisible]);
-
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -94,18 +103,26 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
+    if (!inputs.quantite) {
+      handleError("Vous devez entrer la quantite", "quantite");
+      isValid = false;
+    }
     if (!inputs.commentaire) {
       handleError("Vous devez entrer un commentaire", "commentaire");
       isValid = false;
     }
-    if (!inputs.maladie) {
-      handleError("Vous devez choisir une maladie !", "maladie");
+    if (!inputs.methode) {
+      handleError("Vous devez choisir une méthodes de récolte !", "methode");
+      isValid = false;
+    }
+    if (!inputs.cout) {
+      handleError("Vous devez entrer le cout", "cout");
       isValid = false;
     }
     if (isValid) {
       inputs.date = formatDate(date);
-      if (malade && id !== 0) dispatch(updateMalade(inputs));
-      else dispatch(createMalade(inputs));
+      if (recolt && id !== 0) dispatch(updateRecolt(inputs));
+      else dispatch(createRecolt(inputs));
       ok();
     }
   };
@@ -121,26 +138,32 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     <ModalPopUp
       isVisible={isVisible}
       setIsVisible={cancel}
-      title="Parselle malade"
+      title="Récolt"
       className="w-11/12"
     >
       <ScrollView className="px-1">
         <View className="w-full">
-          <Text className="mb-2">Maladie</Text>
+          <Input
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnchange(text, "quantite")}
+            onFocus={() => handleError(null, "quantite")}
+            label="La quantité "
+            placeholder="Enter quantité recolter en kg..."
+            error={errors.quantite}
+            value={inputs.quantite + ""}
+          />
+          <Text className="mb-2">Méthodes de récolt</Text>
           <SelectDropdown
-            data={listMaladies.map((element) => element.nom)}
-            defaultValue={inputs.maladie.nom}
+            data={methodesRecolte}
+            defaultValue={inputs.methode}
             onSelect={(selectedItem, index) => {
-              const selectedMaladie = listMaladies.filter(
-                (element) => element.nom === selectedItem
-              );
               setInputs((prevState) => ({
                 ...prevState,
-                maladie: selectedMaladie[0],
+                methode: selectedItem,
               }));
-              setErrors((prevState) => ({ ...prevState, maladie: "" }));
+              setErrors((prevState) => ({ ...prevState, methode: "" }));
             }}
-            defaultButtonText={"Sélectionner la maladie"}
+            defaultButtonText={"Sélectionner la methode"}
             buttonTextAfterSelection={(selectedItem, index) => {
               return selectedItem;
             }}
@@ -163,12 +186,12 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
             rowStyle={styles.dropdown2RowStyle}
             rowTextStyle={styles.dropdown2RowTxtStyle}
           />
-          {errors.maladie && (
-            <Text className="text-xs text-red-500">{errors.maladie}</Text>
+          {errors.methode && (
+            <Text className="text-xs text-red-500">{errors.methode}</Text>
           )}
-          <Text className="my-2">Date</Text>
+          <Text className="my-1">Date</Text>
           <TouchableOpacity
-            className="flex-row items-center justify-between p-2 border-black rounded-md"
+            className="flex-row items-center justify-between p-2 mb-1 border-black rounded-md"
             style={{ borderWidth: 0.5 }}
             onPress={showDatePickerHandler}
           >
@@ -193,9 +216,17 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
               onChange={handleDateChange}
             />
           )}
-
           <Input
-            height={100}
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnchange(text, "cout")}
+            onFocus={() => handleError(null, "cout")}
+            label="Le cout "
+            placeholder="Enter le Cout en DH..."
+            error={errors.cout}
+            value={inputs.cout + ""}
+          />
+          <Input
+            height={80}
             multiline
             onChangeText={(text) => handleOnchange(text, "commentaire")}
             onFocus={() => handleError(null, "commentaire")}
@@ -223,7 +254,7 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
                 Enregistrer
               </Text>
             </TouchableOpacity>
-            {malade && (
+            {recolt && (
               <TouchableOpacity
                 onPress={toggleModalDelete}
                 className="flex-row items-center justify-center px-2 py-3 my-3 mr-2 rounded-lg"
@@ -250,7 +281,7 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   );
 };
 
-export default ModalAddMalade;
+export default ModalAddRecolt;
 const styles = StyleSheet.create({
   dropdown2BtnStyle: {
     width: width * 0.85,

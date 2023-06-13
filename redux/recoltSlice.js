@@ -1,21 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import ApiUrl from "../constants/ApiUrl";
 const initialState = {
   recolts: [],
   loading: false,
   error: null,
 };
 
-const URL = "http://192.168.1.103:3000/recolts";
+const URL = ApiUrl + "/recoltes";
 
 export const fetchRecolts = createAsyncThunk(
   "recolts/fetchRecolts",
-  async (_, thunkAPI) => {
+  async (id, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(URL);
-      const data = response.data;
+      const response = await axios.get(URL + "/parcelle/" + id);
+      const data = response.data.data;
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -42,7 +42,7 @@ export const createRecolt = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.post(URL, data);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,8 +54,8 @@ export const updateRecolt = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.patch(`${URL}/${data.id}`, data);
-      return response.data;
+      const response = await axios.put(`${URL}/${data.id}`, data);
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -65,6 +65,47 @@ export const updateRecolt = createAsyncThunk(
 const recoltSlice = createSlice({
   name: "recolts",
   initialState,
+  reducers: {
+    sortByDate: (state) => {
+      state.recolts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    },
+    sortByQuality: (state) => {
+      state.recolts.sort((a, b) => {
+        const qualiteA = a.qualite.toUpperCase();
+        const qualiteB = b.qualite.toUpperCase();
+        if (qualiteA < qualiteB) {
+          return -1;
+        }
+        if (qualiteA > qualiteB) {
+          return 1;
+        }
+        return 0;
+      });
+    },
+    sortByMethode: (state) => {
+      state.recolts.sort((a, b) => {
+        const methodeA = a.methode.toUpperCase();
+        const methodeB = b.methode.toUpperCase();
+        if (methodeA < methodeB) {
+          return -1;
+        }
+        if (methodeA > methodeB) {
+          return 1;
+        }
+        return 0;
+      });
+    },
+    sortByQuantite: (state) => {
+      state.recolts.sort((a, b) => {
+        return a.quantite - b.quantite;
+      });
+    },
+    sortByCout: (state) => {
+      state.recolts.sort((a, b) => {
+        return a.cout - b.cout;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRecolts.pending, (state) => {
@@ -123,4 +164,11 @@ const recoltSlice = createSlice({
       });
   },
 });
+export const {
+  sortByDate,
+  sortByCout,
+  sortByMethode,
+  sortByQuality,
+  sortByQuantite,
+} = recoltSlice.actions;
 export default recoltSlice.reducer;

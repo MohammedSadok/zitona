@@ -6,6 +6,7 @@ import Colors from "../constants/Colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon, { Icons } from "../components/general/Icons";
 import Task from "../components/Task";
+import { useSelector } from "react-redux";
 const slides = {
   fertilisation: require("../assets/navigation/fertiliser.png"),
   arrosage: require("../assets/navigation/arrosage.png"),
@@ -14,22 +15,11 @@ const slides = {
 };
 const Bosket = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState({ add: false, update: false });
+  const { parcelle } = useSelector((state) => state.parcelles);
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
     >
-      {/* <ModalPopUp
-          isVisible={isVisible.add}
-          setIsVisible={() => setIsVisible({ ...isVisible, add: false })}
-        >
-          <Text className="w-56">Ajouter</Text>
-        </ModalPopUp>
-        <ModalPopUp
-          isVisible={isVisible.update}
-          setIsVisible={() => setIsVisible({ ...isVisible, update: false })}
-        >
-          <Text className="w-56">Modifier</Text>
-        </ModalPopUp> */}
       <View className="flex-row items-center justify-between h-20 p-2 px-4">
         <View className="flex-row items-center space-x-3">
           <Image
@@ -78,12 +68,13 @@ const Bosket = ({ navigation }) => {
           elevation: 1,
         }}
       >
-        <Text className="text-lg font-bold">About</Text>
-        <Text style={{ fontFamily: "Mulish_400Regular" }}>
-          des information generale sur le bosquet localisation ...des
-          information generale sur le bosquet localisation ...
+        <Text className="mb-1 text-lg font-bold leading-5 overflow-ellipsis">
+          {parcelle.title}
         </Text>
-        <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
+        <Text style={{ fontFamily: "Mulish_400Regular" }}>
+          {parcelle.localisation}
+        </Text>
+        <View className="flex-row items-center justify-between p-2 px-3">
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
               color={"#606C38"}
@@ -91,8 +82,8 @@ const Bosket = ({ navigation }) => {
               type={Icons.FontAwesome5}
               size={30}
             />
-            <Text style={styles.text}>arbre d'olivier</Text>
-            <Text style={styles.textBold}>15</Text>
+            <Text style={styles.text}>{parcelle.varieter}</Text>
+            <Text style={styles.textBold}>{parcelle.nombreDarbre}</Text>
           </View>
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
@@ -102,7 +93,11 @@ const Bosket = ({ navigation }) => {
               size={30}
             />
             <Text style={styles.text}>arrosage</Text>
-            <Text style={styles.textBold}>3 m3</Text>
+            <View className="flex-row">
+              <Text style={styles.textBold}>{parcelle.debit} m</Text>
+              <Text className="text-xs relatives bottom-1">3</Text>
+              <Text style={styles.textBold}>/h</Text>
+            </View>
           </View>
           <View className="flex-col items-center justify-between space-y-1">
             <Icon

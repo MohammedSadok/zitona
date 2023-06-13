@@ -12,9 +12,9 @@ const Fertilisation = ({ navigation }) => {
       style={{ backfaceVisibility: Colors.backgroundColor }}
     >
       <AddNew />
-      <View className="mx-auto">
+      {/* <View className="mx-auto">
         <BarChartView color={"#2DA779"} />
-      </View>
+      </View> */}
       <View className="flex-row items-center justify-between mx-3 mb-2">
         <Text className="mt-2 text-xl font-bold">Historique</Text>
         <View className="flex-row items-center justify-between space-x-2">

@@ -1,21 +1,50 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import ApiUrl from "../constants/ApiUrl";
 
 const initialState = {
   malades: [],
+  listMaladies: [],
   loading: false,
   error: null,
+  traitement: []
 };
 
-const URL = "http://192.168.1.103:3000/malades";
-
+const URL = ApiUrl + "/parcelles-malades";
 export const fetchMalades = createAsyncThunk(
   "malades/fetchMalades",
+  async (id, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axios.get(ApiUrl+"/parcelles-malades/parcelle/"+id);
+      const data = response.data.data;
+      
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const fetchListMaladie = createAsyncThunk(
+  "malades/fetchListMalades",
   async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(URL);
-      const data = response.data;
+      const response = await axios.get(ApiUrl+"/maladies");
+      const data = response.data.data;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const fetchTraitementPhytosanitaires = createAsyncThunk(
+  "malades/fetchTraitementPhytosanitaires",
+  async (id, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axios.get(ApiUrl+"/traitements_phytosanitaire/maladie/"+id);
+      const data = response.data.data;
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -29,7 +58,7 @@ export const getMalade = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.get(`${URL}/${id}`);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -55,7 +84,7 @@ export const createMalade = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.post(URL, data);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -67,8 +96,8 @@ export const updateMalade = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.patch(`${URL}/${data.id}`, data);
-      return response.data;
+      const response = await axios.put(`${URL}/${data.id}`, data);
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -78,6 +107,24 @@ export const updateMalade = createAsyncThunk(
 const maladeSlice = createSlice({
   name: "malades",
   initialState,
+  reducers: {
+    sortByDate: (state) => {
+      state.malades.sort((a, b) => new Date(a.date) - new Date(b.date));
+    },
+    sortByMaladie: (state) => {
+      state.malades.sort((a, b) => {
+        const maladieA = a.maladie.nom.toUpperCase();
+        const maladieB = b.maladie.nom.toUpperCase();
+        if (maladieA < maladieB) {
+          return -1;
+        }
+        if (maladieA > maladieB) {
+          return 1;
+        }
+        return 0;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMalades.pending, (state) => {
@@ -89,6 +136,34 @@ const maladeSlice = createSlice({
         state.malades = action.payload;
       })
       .addCase(fetchMalades.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //list Maladies
+      .addCase(fetchListMaladie.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchListMaladie.fulfilled, (state, action) => {
+        state.loading = false;
+        state.listMaladies = action.payload;
+      })
+      .addCase(fetchListMaladie.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //traitement
+      .addCase(fetchTraitementPhytosanitaires.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTraitementPhytosanitaires.fulfilled, (state, action) => {
+        state.loading = false;
+        state.traitement = action.payload;
+      })
+      .addCase(fetchTraitementPhytosanitaires.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -156,5 +231,5 @@ const maladeSlice = createSlice({
       });
   },
 });
-
+export const { sortByDate, sortByMaladie } = maladeSlice.actions;
 export default maladeSlice.reducer;

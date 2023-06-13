@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
 import React from "react";
 import Colors from "../../constants/Colors";
-import ModalDeleteParSeil from "../../components/modals/ModalDeleteParseil";
+import ModalDeleteParseil from "../../components/modals/ModalDeleteParseil";
 import ModalAddBosket from "../../components/modals/ModalAddBosket";
 import Icon, { Icons } from "../../components/general/Icons";
+import Loader from "../../components/general/Loader";
 import {
   useFonts,
   Mulish_400Regular,
@@ -11,19 +12,19 @@ import {
 } from "@expo-google-fonts/mulish";
 import BosketItem from "../../components/BosketItem";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchParseils, deleteParseil } from "../../redux/parseilSlice";
+import { fetchParcelles, deleteParcelle } from "../../redux/parcelleSlice";
 import { useEffect, useState } from "react";
 const BosketsScreen = () => {
   var randomImages = [
-    require("../../assets/background-parseil/0.png"),
-    require("../../assets/background-parseil/1.png"),
-    require("../../assets/background-parseil/2.png"),
-    require("../../assets/background-parseil/3.png"),
-    require("../../assets/background-parseil/4.png"),
-    require("../../assets/background-parseil/5.png"),
-    require("../../assets/background-parseil/6.png"),
-    require("../../assets/background-parseil/7.png"),
-    require("../../assets/background-parseil/8.png"),
+    require("../../assets/background-parcelle/0.png"),
+    require("../../assets/background-parcelle/1.png"),
+    require("../../assets/background-parcelle/2.png"),
+    require("../../assets/background-parcelle/3.png"),
+    require("../../assets/background-parcelle/4.png"),
+    require("../../assets/background-parcelle/5.png"),
+    require("../../assets/background-parcelle/6.png"),
+    require("../../assets/background-parcelle/7.png"),
+    require("../../assets/background-parcelle/8.png"),
   ];
 
   const dispatch = useDispatch();
@@ -32,31 +33,33 @@ const BosketsScreen = () => {
     id: null,
     isVisibleAdd: false,
   });
-  const { parseils, loading, error, parseil } = useSelector(
-    (state) => state.parseils
-  );
+  const { parcelles, loading, error, parcelle } = useSelector(
+    (state) => state.parcelles
+    );
+  
   useEffect(() => {
-    dispatch(fetchParseils());
+    dispatch(fetchParcelles());
   }, [dispatch]);
 
   const Items = ({ item }) => {
-    const backgroundColor = item.id === parseil ? Colors.green : Colors.white;
+    const backgroundColor =
+      item.id === parcelle.id ? Colors.green : Colors.white;
     return (
       <BosketItem
         id={item.id}
-        title={item.title}
+        title={item.nom}
         nombreDarbre={item.nombreDarbre}
         varieter={item.varieter}
-        date_de_plantations={item.date_de_plantations}
+        date_de_plantations={item.dateDePlantation}
         type_darossage={item.type_darossage}
         debit={item.debit}
-        localisation={item.localisation}
+        localisation={item.locatisation}
         backgroundColor={backgroundColor}
         toggleModalDelete={() => {
-          if (item.id === parseil) {
+          if (item.id === parcelle.id) {
             Alert.alert(
               "Error",
-              "Vous ne pouvez pas supprimer un Parseil sélectionné"
+              "Vous ne pouvez pas supprimer un parcelle sélectionné"
             );
           } else
             setItem((prev) => ({
@@ -82,14 +85,19 @@ const BosketsScreen = () => {
   }
   return (
     <View
-      style={{ backgroundColor: Colors.backgroundColor, flex: 1,paddingTop: parseil ? 0 : "8%"}}
+      style={{
+        backgroundColor: Colors.backgroundColor,
+        flex: 1,
+        paddingTop: parcelle.id ? 0 : "9%",
+      }}
       className="p-2 px-3"
     >
-      <ModalDeleteParSeil
+      <Loader visible={loading}/>
+      <ModalDeleteParseil
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteParseil(item.id));
+          dispatch(deleteParcelle(item.id));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />
@@ -134,10 +142,10 @@ const BosketsScreen = () => {
           color={Colors.white}
           size={26}
         />
-        <Text className="ml-6 text-lg font-bold">Créer un nouveau parseil</Text>
+        <Text className="ml-6 text-lg font-bold">Créer un nouveau parcelle</Text>
       </TouchableOpacity>
       <FlatList
-        data={parseils}
+        data={parcelles}
         renderItem={Items}
         keyExtractor={(item) => item.id}
       />

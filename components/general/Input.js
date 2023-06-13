@@ -13,6 +13,7 @@ const Input = ({
   error,
   password,
   pwd,
+  height,
   onFocus = () => {},
   ...props
 }) => {
@@ -40,7 +41,8 @@ const Input = ({
               ? Colors.green
               : Colors.light,
             alignItems: "center",
-            height : iconName ? 55 : 45,
+            height: iconName ? 55 : 45,
+            height: height ? 60 : 45,
           },
         ]}
       >
@@ -69,7 +71,7 @@ const Input = ({
         )}
       </View>
       {error && (
-        <Text style={{ marginTop: 7, color: Colors.red, fontSize: 12 }}>
+        <Text style={{ marginTop: 5, color: Colors.red, fontSize: 12 }}>
           {error}
         </Text>
       )}

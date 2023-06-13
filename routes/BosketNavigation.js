@@ -4,6 +4,7 @@ import Fertilisation from "../screens/Fertilisation";
 import Maladie from "../screens/Maladie";
 import NewTask from "../screens/NewTask";
 import Bosket from "../screens/Bosket";
+import Traitement from "../screens/Traitement";
 import {
   useFonts,
   Mulish_400Regular,
@@ -39,6 +40,7 @@ const BosketNavigation = () => {
       <Stack.Screen name="Recolt" component={Recolt} />
       <Stack.Screen name="Fertilisation" component={Fertilisation} />
       <Stack.Screen name="Maladie" component={Maladie} />
+      <Stack.Screen name="Traitement" component={Traitement} />
       <Stack.Screen
         name="NewTask"
         component={NewTask}

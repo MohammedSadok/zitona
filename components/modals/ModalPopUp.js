@@ -26,12 +26,12 @@ const ModalPopUp = ({ isVisible, setIsVisible, children, title }) => {
   return (
     isVisible && (
       <View
-        className="absolute z-10 justify-center pt-4 bg-black opacity-50"
+        className="absolute z-10 justify-center bg-black opacity-50"
         style={{ width: width, height: height }}
       >
         <Modal animationType={"fade"} transparent={true} visible={isVisible}>
           <View className="p-3 m-auto bg-white rounded-xl">
-            <View className="flex-row items-center justify-between mt-2 mb-2">
+            <View className="flex-row items-center justify-between mt-1 mb-2">
               <Text
                 className="text-2xl"
                 style={{ fontFamily: "Mulish_700Bold" }}

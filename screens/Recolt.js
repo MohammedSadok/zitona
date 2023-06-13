@@ -1,41 +1,65 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import AddNew from "../components/AddNew";
 import BarChartView from "../components/charts/BarChart";
 import RecoltItem from "../components/RecoltItem";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import ModalAddRecolt from "../components/modals/ModalAddRecolt";
+import ModalDeleteParseil from "../components/modals/ModalDeleteParseil";
+import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
+import Loader from "../components/general/Loader";
 import {
   useFonts,
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchRecolts } from "../redux/recoltSlice";
-import { useEffect, useState } from "react";
+import {
+  fetchRecolts,
+  deleteRecolt,
+  sortByCout,
+  sortByDate,
+  sortByMethode,
+  sortByQuality,
+  createRecolt,
+  sortByQuantite,
+} from "../redux/recoltSlice";
 const Recolt = ({ navigation }) => {
   const dispatch = useDispatch();
   const { recolts, loading, error } = useSelector((state) => state.recolts);
+  const { parcelle } = useSelector((state) => state.parcelles);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    dispatch(fetchRecolts());
+    dispatch(fetchRecolts(parcelle.id));
   }, [dispatch]);
   const data = {
-    labels: recolts.map((recolt) => recolt.date_recolte),
+    labels: recolts.map((recolt) => recolt.date),
     datasets: [
       {
-        data: recolts.map((recolt) => recolt.quantite_recoltee_kg),
+        data: recolts.map((recolt) => recolt.quantite),
       },
     ],
   };
+  const [item, setItem] = useState({
+    isVisibleDelete: false,
+    id: null,
+    isVisibleAdd: false,
+  });
   const Items = ({ item }) => {
     return (
       <RecoltItem
         id={item.id}
-        date={item.date_recolte}
-        quantite={item.quantite_recoltee_kg}
-        methode={item.methode_recolte}
+        date={item.date}
+        quantite={item.quantite}
+        methode={item.methode}
         qualite={item.qualite}
         commentaire={item.commentaire}
+        cout={item.cout}
+        toggleModalUpdate={() =>
+          setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }))
+        }
       />
     );
   };
@@ -52,17 +76,109 @@ const Recolt = ({ navigation }) => {
       className="flex-1 bg-white"
       style={{ backgroundColor: Colors.backgroundColor }}
     >
-      <AddNew />
-
+      <AddNew
+        open={() => setItem((prev) => ({ ...prev, isVisibleAdd: true, id: 0 }))}
+      />
+      <Loader visible={loading}/>
+      <ModalDeleteParseil
+        isVisible={item.isVisibleDelete}
+        cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
+        ok={() => {
+          dispatch(deleteRecolt(item.id));
+          setItem((prev) => ({ ...prev, isVisibleDelete: false }));
+        }}
+      />
+      <ModalAddRecolt
+        id={item.id}
+        isVisible={item.isVisibleAdd}
+        cancel={() => setItem((prev) => ({ ...prev, isVisibleAdd: false }))}
+        ok={() => {
+          setItem((prev) => ({ ...prev, isVisibleAdd: false }));
+        }}
+        toggleModalDelete={() => {
+          setItem((prev) => ({
+            ...prev,
+            isVisibleAdd: false,
+            isVisibleDelete: true,
+          }));
+        }}
+      />
       <View className="mx-2 mt-2 h-1/3 rounded-xl">
         <BarChartView color={"blue"} data={data} />
       </View>
       <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
-        <View className="flex-row items-center justify-between space-x-2">
-          <Feather name="sliders" size={24} color="black" />
-          <Text className="">Sort/Filter</Text>
-        </View>
+        <Menu
+          visible={visible}
+          anchor={
+            <TouchableOpacity
+              onPress={() => setVisible(true)}
+              className="flex-row items-center justify-between"
+            >
+              <Text
+                className="mr-2 text-xl"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                Trier
+              </Text>
+              <Feather name="sliders" size={24} color="black" />
+            </TouchableOpacity>
+          }
+          onRequestClose={() => setVisible(false)}
+          className="w-24"
+        >
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByDate());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Date</Text>
+            </View>
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByQuality());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Qualite</Text>
+            </View>
+          </MenuItem>
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByCout());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Cout</Text>
+            </View>
+          </MenuItem>
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByQuantite());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Quantite</Text>
+            </View>
+          </MenuItem>
+          <MenuItem
+            onPress={() => {
+              dispatch(sortByMethode());
+              setVisible(false);
+            }}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text style={{ fontFamily: "Mulish_700Bold" }}>Methode</Text>
+            </View>
+          </MenuItem>
+        </Menu>
       </View>
       <FlatList
         data={recolts}
