@@ -23,7 +23,6 @@ import {
   sortByDate,
   sortByMethode,
   sortByQuality,
-  createRecolt,
   sortByQuantite,
 } from "../redux/recoltSlice";
 const Recolt = ({ navigation }) => {
@@ -31,6 +30,11 @@ const Recolt = ({ navigation }) => {
   const { recolts, loading, error } = useSelector((state) => state.recolts);
   const { parcelle } = useSelector((state) => state.parcelles);
   const [visible, setVisible] = useState(false);
+  const [item, setItem] = useState({
+    isVisibleDelete: false,
+    id: 0,
+    isVisibleAdd: false,
+  });
   useEffect(() => {
     dispatch(fetchRecolts(parcelle.id));
   }, [dispatch]);
@@ -42,11 +46,6 @@ const Recolt = ({ navigation }) => {
       },
     ],
   };
-  const [item, setItem] = useState({
-    isVisibleDelete: false,
-    id: null,
-    isVisibleAdd: false,
-  });
   const Items = ({ item }) => {
     return (
       <RecoltItem
@@ -73,7 +72,7 @@ const Recolt = ({ navigation }) => {
   }
   return (
     <View
-      className="flex-1 bg-white"
+      className="flex-1"
       style={{ backgroundColor: Colors.backgroundColor }}
     >
       <AddNew

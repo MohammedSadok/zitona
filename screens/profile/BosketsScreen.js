@@ -3,6 +3,7 @@ import React from "react";
 import Colors from "../../constants/Colors";
 import ModalDeleteParseil from "../../components/modals/ModalDeleteParseil";
 import ModalAddBosket from "../../components/modals/ModalAddBosket";
+import ModalMap from "../../components/modals/ModalMap";
 import Icon, { Icons } from "../../components/general/Icons";
 import Loader from "../../components/general/Loader";
 import {
@@ -14,6 +15,7 @@ import BosketItem from "../../components/BosketItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchParcelles, deleteParcelle } from "../../redux/parcelleSlice";
 import { useEffect, useState } from "react";
+
 const BosketsScreen = () => {
   var randomImages = [
     require("../../assets/background-parcelle/0.png"),
@@ -32,11 +34,12 @@ const BosketsScreen = () => {
     isVisibleDelete: false,
     id: null,
     isVisibleAdd: false,
+    isVisibleMap: false,
   });
   const { parcelles, loading, error, parcelle } = useSelector(
     (state) => state.parcelles
-    );
-  
+  );
+
   useEffect(() => {
     dispatch(fetchParcelles());
   }, [dispatch]);
@@ -53,7 +56,7 @@ const BosketsScreen = () => {
         date_de_plantations={item.dateDePlantation}
         type_darossage={item.type_darossage}
         debit={item.debit}
-        localisation={item.locatisation}
+        localisation={item.localisation}
         backgroundColor={backgroundColor}
         toggleModalDelete={() => {
           if (item.id === parcelle.id) {
@@ -92,7 +95,7 @@ const BosketsScreen = () => {
       }}
       className="p-2 px-3"
     >
-      <Loader visible={loading}/>
+      <Loader visible={loading} />
       <ModalDeleteParseil
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
@@ -108,8 +111,16 @@ const BosketsScreen = () => {
         ok={() => {
           setItem((prev) => ({ ...prev, isVisibleAdd: false }));
         }}
+        toggleModalMap={() =>
+          setItem((prev) => ({ ...prev, isVisibleMap: true }))
+        }
       />
-
+      <ModalMap
+        changeVisibility={() =>
+          setItem((prev) => ({ ...prev, isVisibleMap: false }))
+        }
+        isVisible={item.isVisibleMap}
+      />
       <View className="">
         <Text
           style={{ fontFamily: "Mulish_700Bold" }}
@@ -142,7 +153,9 @@ const BosketsScreen = () => {
           color={Colors.white}
           size={26}
         />
-        <Text className="ml-6 text-lg font-bold">Créer un nouveau parcelle</Text>
+        <Text className="ml-6 text-lg font-bold">
+          Créer un nouveau parcelle
+        </Text>
       </TouchableOpacity>
       <FlatList
         data={parcelles}

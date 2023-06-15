@@ -16,6 +16,7 @@ import Colors from "../../constants/Colors";
 import SelectDropdown from "react-native-select-dropdown";
 import Input from "../general/Input";
 import Icon, { Icons } from "../general/Icons";
+import { formatDate } from "../../utils/dateHandlers";
 import {
   useFonts,
   Mulish_400Regular,
@@ -37,7 +38,7 @@ const oliveVarieties = [
   "Moroccan Amfissa",
 ];
 
-const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
+const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     nom: "",
@@ -48,8 +49,8 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
     debit: 0,
     localisation: "",
     user: {
-      id: 1
-    }
+      id: 1,
+    },
   });
 
   const [isSelected, setSelection] = useState(false);
@@ -62,7 +63,12 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
   );
   useEffect(() => {
     if (parcelle && id !== 0) {
-      setInputs(parcelle);
+      setInputs({
+        ...parcelle,
+        user: {
+          id: 1,
+        },
+      });
       if (parcelle.type_darossage !== "") {
         setSelection(true);
         setDate(new Date(inputs.dateDePlantation));
@@ -77,14 +83,19 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
         debit: 0,
         localisation: "",
         user: {
-          id: 1
-        }
+          id: 1,
+        },
       });
       setDate(new Date());
       setSelection(false);
     }
   }, [id]);
-
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -94,18 +105,7 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
   const showDatePickerHandler = () => {
     setShowDatePicker(true);
   };
-  const handleOnchange = (text, input) => {
-    setInputs((prevState) => ({ ...prevState, [input]: text }));
-  };
-  const handleError = (error, input) => {
-    setErrors((prevState) => ({ ...prevState, [input]: error }));
-  };
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -255,14 +255,26 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id }) => {
               value={inputs.debit + ""}
             />
           )}
-          <Input
+          {/* <Input
             onChangeText={(text) => handleOnchange(text, "localisation")}
             onFocus={() => handleError(null, "localisation")}
             label="Adresse"
             placeholder="Adresse du parseil d'oliviers ..."
             error={errors.localisation}
             value={inputs.localisation}
-          />
+          /> */}
+          <TouchableOpacity
+            onPress={toggleModalMap}
+            className="flex-row items-center justify-center px-4 my-3 rounded-lg"
+            style={{ backgroundColor: Colors.blue }}
+          >
+            <Text
+              className="text-lg text-white"
+              style={{ fontFamily: "Mulish_700Bold" }}
+            >
+              Enregistrer
+            </Text>
+          </TouchableOpacity>
           <View className="flex-row-reverse">
             <TouchableOpacity
               onPress={validate}

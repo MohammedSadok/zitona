@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTraitementPhytosanitaires } from "../redux/maladeSlice";
 import Loader from "../components/general/Loader";
 import Colors from "../constants/Colors";
-import ItemTraitement from "../components/ItemTraitement";
+import ItemTraitementPhytosanitaires from "../components/ItemTraitementPhytosanitaires";
 const Traitement = ({ navigation, route }) => {
   const { id } = route.params;
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const Traitement = ({ navigation, route }) => {
 
   const Items = ({ item }) => {
     return (
-      <ItemTraitement
+      <ItemTraitementPhytosanitaires
         id={item.id}
         description={item.description}
         nomProduit={item.nomProduit}

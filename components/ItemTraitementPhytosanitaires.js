@@ -1,7 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 
-const ItemTraitement = ({
+const ItemTraitementPhytosanitaires = ({
   id,
   description,
   nomProduit,
@@ -46,4 +46,4 @@ const ItemTraitement = ({
   );
 };
 
-export default ItemTraitement;
+export default ItemTraitementPhytosanitaires;

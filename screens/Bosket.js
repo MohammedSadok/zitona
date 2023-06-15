@@ -1,5 +1,4 @@
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigate from "../components/Navigate";
 import Colors from "../constants/Colors";
@@ -14,7 +13,6 @@ const slides = {
   recolt: require("../assets/navigation/recolt.png"),
 };
 const Bosket = ({ navigation }) => {
-  const [isVisible, setIsVisible] = useState({ add: false, update: false });
   const { parcelle } = useSelector((state) => state.parcelles);
   return (
     <SafeAreaView

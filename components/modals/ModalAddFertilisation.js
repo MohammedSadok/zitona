@@ -7,13 +7,10 @@ import {
   Dimensions,
   Keyboard,
 } from "react-native";
-import Checkbox from "expo-checkbox";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState, useEffect } from "react";
 import ModalPopUp from "./ModalPopUp";
 import Colors from "../../constants/Colors";
-import SelectDropdown from "react-native-select-dropdown";
 import Input from "../general/Input";
 import Icon, { Icons } from "../general/Icons";
 import {
@@ -22,49 +19,58 @@ import {
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
 import { useDispatch, useSelector } from "react-redux";
-import { createMalade, updateMalade } from "../../redux/maladeSlice";
+import {
+  createFertilisation,
+  updateFertilisation,
+} from "../../redux/fertilisationSlice";
 import { formatDate } from "../../utils/dateHandlers";
 
 const width = Dimensions.get("screen").width;
 
-const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
+const ModalAddFertilisation = ({
+  isVisible,
+  ok,
+  cancel,
+  id,
+  toggleModalDelete,
+}) => {
   const dispatch = useDispatch();
-  const parcelle = useSelector((state) => state.parcelles.parcelle);
-  const [errors, setErrors] = useState({});
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const malade = useSelector((state) =>
-    state.malades.malades.find((element) => element.id === id)
+  const fertilisation = useSelector((state) =>
+    state.fertilisations.fertilisations.find((element) => element.id === id)
   );
-  const listMaladies = useSelector((state) => state.malades.listMaladies);
+
+  const { parcelle } = useSelector((state) => state.parcelles);
   const [inputs, setInputs] = useState({
     date: new Date(),
-    commentaire: "",
-    maladie: {
-      nom: "",
-    },
+    commentaire: null,
+    quantite: "",
+    typeDengrais: "",
+    cout: "",
     parcelle: {
       id: parcelle.id,
     },
   });
 
+  const [errors, setErrors] = useState({});
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   useEffect(() => {
-    if (malade && id !== 0) {
-      setDate(new Date(inputs.date));
+    if (fertilisation && id !== 0) {
       setInputs({
-        ...malade,
+        ...fertilisation,
         parcelle: {
           id: parcelle.id,
         },
       });
+      setDate(new Date(inputs.date));
     } else {
       setInputs({
         date: new Date(),
-        commentaire: "",
-        maladie: {
-          nom: "",
-        },
+        commentaire: null,
+        quantite: "",
+        typeDengrais: "",
+        cout: "",
         parcelle: {
           id: parcelle.id,
         },
@@ -88,21 +94,34 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const showDatePickerHandler = () => {
     setShowDatePicker(true);
   };
+
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
+    if (!inputs.quantite) {
+      handleError("Vous devez entrer la quantite", "quantite");
+      isValid = false;
+    }
     if (!inputs.commentaire) {
       handleError("Vous devez entrer un commentaire", "commentaire");
       isValid = false;
     }
-    if (!inputs.maladie) {
-      handleError("Vous devez choisir une maladie !", "maladie");
+    if (!inputs.typeDengrais) {
+      handleError(
+        "Vous devez entrer un commentaire type dengrais !",
+        "typeDengrais"
+      );
+      isValid = false;
+    }
+    if (!inputs.cout) {
+      handleError("Vous devez entrer le cout", "cout");
       isValid = false;
     }
     if (isValid) {
       inputs.date = formatDate(date);
-      if (malade && id !== 0) dispatch(updateMalade(inputs));
-      else dispatch(createMalade(inputs));
+      if (fertilisation && id !== 0) 
+        dispatch(updateFertilisation(inputs));
+       else dispatch(createFertilisation(inputs));
       ok();
     }
   };
@@ -115,57 +134,30 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     return null;
   }
   return (
-    <ModalPopUp
-      isVisible={isVisible}
-      setIsVisible={cancel}
-      title="Parselle malade"
-      className="w-11/12"
-    >
-      <ScrollView className="px-1">
+    <ModalPopUp isVisible={isVisible} setIsVisible={cancel} title="Récolt">
+      <ScrollView className="px-1" style={{ width: width * 0.85 }}>
         <View className="w-full">
-          <Text className="mb-2">Maladie</Text>
-          <SelectDropdown
-            data={listMaladies.map((element) => element.nom)}
-            defaultValue={inputs.maladie.nom}
-            onSelect={(selectedItem, index) => {
-              const selectedMaladie = listMaladies.filter(
-                (element) => element.nom === selectedItem
-              );
-              setInputs((prevState) => ({
-                ...prevState,
-                maladie: selectedMaladie[0],
-              }));
-              setErrors((prevState) => ({ ...prevState, maladie: "" }));
-            }}
-            defaultButtonText={"Sélectionner la maladie"}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-            buttonStyle={styles.dropdown2BtnStyle}
-            buttonTextStyle={styles.dropdown2BtnTxtStyle}
-            renderDropdownIcon={(isOpened) => {
-              return (
-                <FontAwesome
-                  name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={Colors.black}
-                  size={18}
-                />
-              );
-            }}
-            dropdownIconPosition={"right"}
-            dropdownStyle={styles.dropdown2DropdownStyle}
-            rowStyle={styles.dropdown2RowStyle}
-            rowTextStyle={styles.dropdown2RowTxtStyle}
+          <Input
+            onChangeText={(text) => handleOnchange(text, "typeDengrais")}
+            onFocus={() => handleError(null, "typeDengrais")}
+            label="type dengrais "
+            placeholder="Enter le type dengrais"
+            error={errors.typeDengrais}
+            value={inputs.typeDengrais + ""}
           />
-          {errors.maladie && (
-            <Text className="text-xs text-red-500">{errors.maladie}</Text>
-          )}
-          <Text className="my-2">Date</Text>
+          <Input
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnchange(text, "quantite")}
+            onFocus={() => handleError(null, "quantite")}
+            label="La quantité "
+            placeholder="Enter quantité en kg..."
+            error={errors.quantite}
+            value={inputs.quantite + ""}
+          />
+
+          <Text className="my-1">Date</Text>
           <TouchableOpacity
-            className="flex-row items-center justify-between p-2 border-black rounded-md"
+            className="flex-row items-center justify-between p-2 mb-1 border-black rounded-md"
             style={{ borderWidth: 0.5 }}
             onPress={showDatePickerHandler}
           >
@@ -190,9 +182,17 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
               onChange={handleDateChange}
             />
           )}
-
           <Input
-            height={100}
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnchange(text, "cout")}
+            onFocus={() => handleError(null, "cout")}
+            label="Le cout "
+            placeholder="Enter le Cout en DH..."
+            error={errors.cout}
+            value={inputs.cout + ""}
+          />
+          <Input
+            height={80}
             multiline
             onChangeText={(text) => handleOnchange(text, "commentaire")}
             onFocus={() => handleError(null, "commentaire")}
@@ -220,7 +220,7 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
                 Enregistrer
               </Text>
             </TouchableOpacity>
-            {malade && (
+            {fertilisation && (
               <TouchableOpacity
                 onPress={toggleModalDelete}
                 className="flex-row items-center justify-center px-2 py-3 my-3 mr-2 rounded-lg"
@@ -247,7 +247,7 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   );
 };
 
-export default ModalAddMalade;
+export default ModalAddFertilisation;
 const styles = StyleSheet.create({
   dropdown2BtnStyle: {
     width: width * 0.85,

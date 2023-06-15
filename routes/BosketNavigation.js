@@ -4,7 +4,7 @@ import Fertilisation from "../screens/Fertilisation";
 import Maladie from "../screens/Maladie";
 import NewTask from "../screens/NewTask";
 import Bosket from "../screens/Bosket";
-import Traitement from "../screens/Traitement";
+import Traitement from "../screens/TraitementFSTR";
 import {
   useFonts,
   Mulish_400Regular,

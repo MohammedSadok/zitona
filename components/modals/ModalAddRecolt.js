@@ -22,6 +22,8 @@ import {
 } from "@expo-google-fonts/mulish";
 import { useDispatch, useSelector } from "react-redux";
 import { createRecolt, updateRecolt } from "../../redux/recoltSlice";
+import { formatDate } from "../../utils/dateHandlers";
+
 const width = Dimensions.get("screen").width;
 var methodesRecolte = [
   "Manuelle",
@@ -34,9 +36,14 @@ var methodesRecolte = [
 
 const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const dispatch = useDispatch();
+  const recolt = useSelector((state) =>
+    state.recolts.recolts.find((element) => element.id === id)
+  );
+
+  const { parcelle } = useSelector((state) => state.parcelles);
   const [inputs, setInputs] = useState({
     date: new Date(),
-    commentaire: null,
+    commentaire: "",
     quantite: "",
     methode: "",
     qualite: "Vierge",
@@ -50,21 +57,19 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const recolt = useSelector((state) =>
-    state.recolts.recolts.find((element) => element.id === id)
-  );
-
-  const { parcelle } = useSelector(
-    (state) => state.parcelles
-    );
   useEffect(() => {
     if (recolt && id !== 0) {
-      setInputs(recolt);
+      setInputs({
+        ...recolt,
+        parcelle: {
+          id: parcelle.id,
+        },
+      });
       setDate(new Date(inputs.date));
     } else {
       setInputs({
         date: new Date(),
-        commentaire: null,
+        commentaire: "",
         quantite: "",
         methode: "",
         qualite: "Vierge",
@@ -77,14 +82,11 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
       setDate(new Date());
     }
   }, [id, isVisible]);
+
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
-  };
-
-  const showDatePickerHandler = () => {
-    setShowDatePicker(true);
   };
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -92,12 +94,8 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  const showDatePickerHandler = () => {
+    setShowDatePicker(true);
   };
 
   const validate = () => {
