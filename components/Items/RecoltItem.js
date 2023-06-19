@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import Icon, { Icons } from "../general/Icons";
 import {
   useFonts,
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
+import Colors from "../../constants/Colors";
 const RecoltItem = ({
   id,
   date,
@@ -15,6 +17,20 @@ const RecoltItem = ({
   commentaire,
   toggleModalUpdate,
 }) => {
+  const quality = {
+    color: "",
+    name: "",
+  };
+  if (qualite === "Bonne") {
+    quality.color = Colors.green;
+    quality.name = "smileo";
+  } else if (qualite === "Moyenne") {
+    quality.color = Colors.gray;
+    quality.name = "meh";
+  } else {
+    quality.color = Colors.red;
+    quality.name = "frowno";
+  }
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -24,7 +40,7 @@ const RecoltItem = ({
   }
   return (
     <TouchableOpacity
-      className="p-3 mx-2 mb-2 bg-white rounded-md"
+      className="p-2 pb-1 mx-2 mb-2 bg-white rounded-md"
       style={{
         shadowColor: "#000",
         shadowOffset: {
@@ -39,7 +55,7 @@ const RecoltItem = ({
       onLongPress={toggleModalUpdate}
     >
       <View className="flex-row items-center justify-between">
-        <View className="flex-row items-baseline justify-center space-x-2">
+        <View className="flex-row items-center justify-center space-x-2">
           <Text className="text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
             {quantite} Kg
           </Text>
@@ -49,22 +65,31 @@ const RecoltItem = ({
           >
             {methode}
           </Text>
+          <Icon
+            type={Icons.AntDesign}
+            name={quality.name}
+            color={quality.color}
+            size={28}
+          />
         </View>
-        <Text className="text-base" style={{ fontFamily: "Mulish_700Bold" }}>
-          {qualite}
-        </Text>
-        <Text className="text-xs" style={{ fontFamily: "Mulish_400Regular" }}>
-          {date}
+        <Text
+          style={{ fontFamily: "Mulish_400Regular",color:Colors.blue }}
+          className="text-sm text-red-500"
+        >
+          {cout} Dh
         </Text>
       </View>
       <View className="flex-row items-baseline space-x-2">
         <Text className="text-sm" style={{ fontFamily: "Mulish_400Regular" }}>
           {commentaire}
         </Text>
-        <Text className="text-xs" style={{ fontFamily: "Mulish_400Regular" }}>
-          {cout} DH
-        </Text>
       </View>
+      <Text
+        className="text-xs text-right text-gray-400"
+        style={{ fontFamily: "Mulish_400Regular" }}
+      >
+        {date}
+      </Text>
     </TouchableOpacity>
   );
 };

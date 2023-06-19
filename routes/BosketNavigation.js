@@ -2,9 +2,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Recolt from "../screens/Recolt";
 import Fertilisation from "../screens/Fertilisation";
 import Maladie from "../screens/Maladie";
-import NewTask from "../screens/NewTask";
+import Traitement from "../screens/Traitement";
 import Bosket from "../screens/Bosket";
-import Traitement from "../screens/TraitementFSTR";
+import TraitementFSTR from "../screens/TraitementFSTR";
 import {
   useFonts,
   Mulish_400Regular,
@@ -40,11 +40,11 @@ const BosketNavigation = () => {
       <Stack.Screen name="Recolt" component={Recolt} />
       <Stack.Screen name="Fertilisation" component={Fertilisation} />
       <Stack.Screen name="Maladie" component={Maladie} />
-      <Stack.Screen name="Traitement" component={Traitement} />
+      <Stack.Screen name="TraitementFSTR" component={TraitementFSTR} />
       <Stack.Screen
-        name="NewTask"
-        component={NewTask}
-        options={{ title: "Nouvelle Tache" }}
+        name="Traitement"
+        component={Traitement}
+        options={{ title: "Traitement" }}
       />
     </Stack.Navigator>
   );

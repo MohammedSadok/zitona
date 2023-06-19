@@ -3,7 +3,7 @@ import React from "react";
 import { Feather } from "@expo/vector-icons";
 import Icon,{Icons} from "../../components/general/Icons";
 import Colors from "../../constants/Colors";
-import MaladeItem from "../../components/MaladeItem";
+import MaladeItem from "../../components/Items/MaladeItem";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteMalade, fetchMalades,sortByDate,sortByMaladie } from "../../redux/maladeSlice";
 import { useEffect, useState } from "react";

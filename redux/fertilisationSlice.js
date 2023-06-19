@@ -11,12 +11,15 @@ const initialState = {
 const URL = ApiUrl + "/fertilisations";
 export const fetchFertilisations = createAsyncThunk(
   "fertilisations/fetchFertilisations",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(URL + "/parcelle/" + id);
-      const data = response.data.data;
-      return data;
+      const response = await axios.get(URL + "/parcelle/" + data.id, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return response.data.data !== null ? response.data.data : [];
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -25,10 +28,14 @@ export const fetchFertilisations = createAsyncThunk(
 
 export const getFertilisation = createAsyncThunk(
   "fertilisations/getFertilisation",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(`${URL}/${id}`);
+      const response = await axios.get(`${URL}/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -38,11 +45,15 @@ export const getFertilisation = createAsyncThunk(
 
 export const deleteFertilisation = createAsyncThunk(
   "fertilisations/deleteFertilisation",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.delete(URL + `/${id}`);
-      return id;
+      const response = await axios.delete(URL + `/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return data.id;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,7 +65,11 @@ export const createFertilisation = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.post(URL, data);
+      const response = await axios.post(URL, data.fertilisation, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -67,8 +82,15 @@ export const updateFertilisation = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.put(`${URL}/${data.id}`, data);
-      console.log(data);
+      const response = await axios.put(
+        `${URL}/${data.fertilisation.id}`,
+        data.fertilisation,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);

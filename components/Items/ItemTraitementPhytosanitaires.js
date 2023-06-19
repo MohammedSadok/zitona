@@ -26,7 +26,7 @@ const ItemTraitementPhytosanitaires = ({
     >
       <View className="flex-row items-center">
         <Image
-          source={require("../assets/FongiStop.jpg")}
+          source={require("../../assets/FongiStop.jpg")}
           resizeMode="cover"
           className="w-1/4 h-24"
         />

@@ -11,12 +11,15 @@ const URL = ApiUrl + "/traitements";
 
 export const fetchTraitements = createAsyncThunk(
   "traitements/fetchTraitements",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(URL + "/parcelle/" + id);
-      const data = response.data.data;
-      return data;
+      const response = await axios.get(URL + "/parcelle/" + data.id, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return response.data.data !== null ? response.data.data : [];
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -25,11 +28,15 @@ export const fetchTraitements = createAsyncThunk(
 
 export const deleteTraitement = createAsyncThunk(
   "traitements/deleteTraitement",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.delete(URL + `/${id}`);
-      return id;
+      const response = await axios.delete(URL + `/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return data.id;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -41,7 +48,11 @@ export const createTraitement = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.post(URL, data);
+      const response = await axios.post(URL, data.traitement, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -54,7 +65,15 @@ export const updateTraitement = createAsyncThunk(
   async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.put(`${URL}/${data.id}`, data);
+      const response = await axios.put(
+        `${URL}/${data.traitement.id}`,
+        data.traitement,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);

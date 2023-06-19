@@ -11,8 +11,10 @@ import Input from "../components/general/Input";
 import { useState } from "react";
 import { loginStart, loginSuccess, loginFailure } from "../redux/authSlice";
 import Loader from "../components/general/Loader";
-import { login } from "../services/UserService";
+import { login } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({ email: "", password: "" });
@@ -20,26 +22,22 @@ const Login = ({ navigation }) => {
   const isLoading = useSelector((state) => state.userAuth.loading);
 
   const validate = async () => {
-    dispatch(loginStart());
     Keyboard.dismiss();
     let isValid = true;
     if (!inputs.email) {
       handleError("Veuillez entrer votre adresse e-mail", "email");
       isValid = false;
-      dispatch(loginFailure("login failed"));
+      // dispatch(loginFailure("login failed"));
     }
     if (!inputs.password) {
       handleError("Veuillez entrer votre mot de passe", "password");
       isValid = false;
-      dispatch(loginFailure("login failed"));
+      // dispatch(loginFailure("login failed"));
     }
     if (isValid) {
-      // wait a few seconds before continuing
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      login(inputs.email, inputs.password);
-      dispatch(loginSuccess(inputs));
-      console.log(inputs);
+      dispatch(login(inputs));
     }
+    // login(inputs.email, inputs.password);
   };
 
   const handleOnchange = (text, input) => {

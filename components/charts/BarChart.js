@@ -25,11 +25,11 @@ const BarChartView = ({ color,data }) => {
         fillShadowGradient: color,
         fillShadowGradientOpacity: 1,
         fillShadowGradientToOpacity: 0.6,
-        barPercentage: 0.67,
+        barPercentage: 0.5,
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
         barRadius: 2,
         propsForLabels: {
-          fontSize: "12",
+          fontSize: "10",
         },
 
         style: {

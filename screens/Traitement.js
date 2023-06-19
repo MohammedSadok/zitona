@@ -8,9 +8,9 @@ import {
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import AddNew from "../components/AddNew";
+import AddNew from "../components/general/AddNew";
 import PieChart from "../components/charts/PieChart";
-import ItemTritement from "../components/ItemTritement";
+import ItemTritement from "../components/Items/ItemTritement";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import ModalAddTraitement from "../components/modals/ModalAddTraitement";
@@ -27,11 +27,12 @@ import {
   deleteTraitement,
   sortByDate,
 } from "../redux/traitementSlice";
-const NewTask = ({ navigation }) => {
+const Traitement = ({ navigation }) => {
   const dispatch = useDispatch();
   const { traitements, loading, error } = useSelector(
     (state) => state.traitements
   );
+  const { token } = useSelector((state) => state.userAuth);
   const { parcelle } = useSelector((state) => state.parcelles);
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState({
@@ -40,7 +41,7 @@ const NewTask = ({ navigation }) => {
     isVisibleAdd: false,
   });
   useEffect(() => {
-    dispatch(fetchTraitements(parcelle.id));
+    dispatch(fetchTraitements({ id: parcelle.id, token: token }));
   }, [dispatch]);
 
   const counts = {};
@@ -77,6 +78,7 @@ const NewTask = ({ navigation }) => {
       <ItemTritement
         id={item.id}
         date={item.date}
+        cout={item.cout}
         typeTraitement={item.typeTraitement}
         description={item.description}
         toggleModalUpdate={() =>
@@ -106,7 +108,7 @@ const NewTask = ({ navigation }) => {
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteTraitement(item.id));
+          dispatch(deleteTraitement({ id: item.id, token: token }));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />
@@ -125,36 +127,38 @@ const NewTask = ({ navigation }) => {
           }));
         }}
       />
-      <View
-        horizontal
-        className="flex-row items-center justify-between p-2 pb-0 mx-2"
-      >
-        <PieChart data={Table} />
-        <View className="">
-          <View>
-            {Table.map((item, index) => (
-              <View
-                key={index}
-                className="flex-col items-center justify-center py-1 mb-1 rounded-xl"
-                style={{ backgroundColor: item.color }}
-              >
-                <Text
-                  className="text-xs text-white"
-                  style={{ fontFamily: "Mulish_700Bold" }}
+      {Table.length > 0 && (
+        <View
+          horizontal
+          className="flex-row items-center justify-between p-2 pb-0 mx-2"
+        >
+          <PieChart data={Table} />
+          <View className="">
+            <View>
+              {Table.map((item, index) => (
+                <View
+                  key={index}
+                  className="flex-col items-center justify-center py-1 mb-1 rounded-xl"
+                  style={{ backgroundColor: item.color }}
                 >
-                  {item.percentage} %
-                </Text>
-                <Text
-                  className="px-2 text-xs text-white"
-                  style={{ fontFamily: "Mulish_700Bold" }}
-                >
-                  {item.label}
-                </Text>
-              </View>
-            ))}
+                  <Text
+                    className="text-xs text-white"
+                    style={{ fontFamily: "Mulish_700Bold" }}
+                  >
+                    {item.percentage} %
+                  </Text>
+                  <Text
+                    className="px-2 text-xs text-white"
+                    style={{ fontFamily: "Mulish_700Bold" }}
+                  >
+                    {item.label}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
+      )}
       <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <Menu
@@ -229,6 +233,7 @@ const NewTask = ({ navigation }) => {
           </MenuItem>
         </Menu>
       </View>
+
       <FlatList
         data={traitements}
         renderItem={Items}
@@ -238,4 +243,4 @@ const NewTask = ({ navigation }) => {
   );
 };
 
-export default NewTask;
+export default Traitement;

@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import Icon, { Icons } from "./general/Icons";
+import Icon, { Icons } from "../general/Icons";
 import React from "react";
-
 const MaladeItem = ({
   id,
   date,
@@ -10,6 +9,7 @@ const MaladeItem = ({
   navigation,
   toggleModalUpdate,
 }) => {
+  
   return (
     <TouchableOpacity
       className="p-2.5 pb-1 mx-2 mb-2 bg-white rounded-md"
@@ -25,7 +25,7 @@ const MaladeItem = ({
         elevation: 1,
       }}
       onPress={() =>
-        navigation.navigate("Traitement", {
+        navigation.navigate("TraitementFSTR", {
           id: id,
         })
       }

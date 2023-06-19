@@ -11,7 +11,7 @@ import {
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
-import BosketItem from "../../components/BosketItem";
+import BosketItem from "../../components/Items/BosketItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchParcelles, deleteParcelle } from "../../redux/parcelleSlice";
 import { useEffect, useState } from "react";
@@ -36,12 +36,36 @@ const BosketsScreen = () => {
     isVisibleAdd: false,
     isVisibleMap: false,
   });
-  const { parcelles, loading, error, parcelle } = useSelector(
+  const { parcelles, loading, parcelle } = useSelector(
     (state) => state.parcelles
   );
+  const { token, user } = useSelector((state) => state.userAuth);
+
+    let totalDarbre = 0;
+    parcelles.forEach(item => totalDarbre += item.nombreDarbre);
+  const [marker, setMarker] = useState(null);
+  const [error, setError] = useState(false);
+
+  const initializeMarker = (location) => setMarker(location);
+  const handleMapPress = (event) => {
+    const { coordinate } = event.nativeEvent;
+    setMarker({
+      coordinate,
+    });
+  };
+  const check = () => {
+    if (marker === null) {
+      resultError = true;
+    } else {
+      resultError = false;
+      setItem((prev) => ({ ...prev, isVisibleMap: false }));
+    }
+
+    setError(resultError);
+  };
 
   useEffect(() => {
-    dispatch(fetchParcelles());
+    dispatch(fetchParcelles({ token: token, ...user }));
   }, [dispatch]);
 
   const Items = ({ item }) => {
@@ -49,6 +73,8 @@ const BosketsScreen = () => {
       item.id === parcelle.id ? Colors.green : Colors.white;
     return (
       <BosketItem
+        latitude={item.latitude}
+        longitude={item.longitude}
         id={item.id}
         title={item.nom}
         nombreDarbre={item.nombreDarbre}
@@ -71,9 +97,9 @@ const BosketsScreen = () => {
               id: item.id,
             }));
         }}
-        toggleModalUpdate={() =>
-          setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }))
-        }
+        toggleModalUpdate={() => {
+          setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }));
+        }}
         image={randomImages[item.id]}
       />
     );
@@ -100,11 +126,12 @@ const BosketsScreen = () => {
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteParcelle(item.id));
+          dispatch(deleteParcelle({ id: item.id, token: token }));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />
       <ModalAddBosket
+        marker={marker}
         id={item.id}
         isVisible={item.isVisibleAdd}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleAdd: false }))}
@@ -114,8 +141,13 @@ const BosketsScreen = () => {
         toggleModalMap={() =>
           setItem((prev) => ({ ...prev, isVisibleMap: true }))
         }
+        initializeMarker={initializeMarker}
       />
       <ModalMap
+        marker={marker}
+        error={error}
+        check={check}
+        handleMapPress={handleMapPress}
         changeVisibility={() =>
           setItem((prev) => ({ ...prev, isVisibleMap: false }))
         }
@@ -126,9 +158,9 @@ const BosketsScreen = () => {
           style={{ fontFamily: "Mulish_700Bold" }}
           className="text-3xl font-bold"
         >
-          5 Boskets
+          {parcelles.length} Boskets
         </Text>
-        <Text className="text-base">10022 Arbre</Text>
+        <Text className="text-base">{totalDarbre} Arbre</Text>
       </View>
       <TouchableOpacity
         onPress={() =>

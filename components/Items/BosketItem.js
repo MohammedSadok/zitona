@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useState } from "react";
-import Icon, { Icons } from "./general/Icons";
-import { SelectParcelle } from "../redux/parcelleSlice";
+import Icon, { Icons } from "../general/Icons";
+import { SelectParcelle } from "../../redux/parcelleSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import {
   useFonts,
@@ -18,8 +18,9 @@ const BosketItem = ({
   varieter,
   date_de_plantations,
   type_darossage,
+  latitude,
+  longitude,
   debit,
-  localisation,
   backgroundColor,
   image,
   toggleModalUpdate,
@@ -29,7 +30,6 @@ const BosketItem = ({
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
   const dispatch = useDispatch();
-
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -50,7 +50,8 @@ const BosketItem = ({
             varieter,
             date_de_plantations,
             debit,
-            localisation,
+            latitude,
+            longitude,
           })
         );
       }}
@@ -75,7 +76,7 @@ const BosketItem = ({
         <Text>
           Arrosage {type_darossage} debit {debit} m3/min
         </Text>
-        <Text className="text-sm text-slate-600">{localisation}</Text>
+        {/* <Text className="text-sm text-slate-600">{localisation}</Text> */}
       </View>
       <View className="relative flex-col items-center justify-center w-2/6 overflow-hidden">
         <View className="self-end mr-1">

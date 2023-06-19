@@ -45,11 +45,11 @@ const ModalAddTraitement = ({
   const [errors, setErrors] = useState({});
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
+  const { token } = useSelector((state) => state.userAuth);
   const traitement = useSelector((state) =>
     state.traitements.traitements.find((element) => element.id === id)
   );
-  
+
   const [inputs, setInputs] = useState({
     date: new Date(),
     description: "",
@@ -118,8 +118,9 @@ const ModalAddTraitement = ({
     }
     if (isValid) {
       inputs.date = formatDate(date);
-      if (traitement && id !== 0) dispatch(updateTraitement(inputs));
-      else dispatch(createTraitement(inputs));
+      if (traitement && id !== 0)
+        dispatch(updateTraitement({ traitement: inputs, token: token }));
+      else dispatch(createTraitement({ traitement: inputs, token: token }));
       ok();
     }
   };
@@ -163,7 +164,7 @@ const ModalAddTraitement = ({
             renderDropdownIcon={(isOpened) => {
               return (
                 <Icon
-                type={Icons.FontAwesome}
+                  type={Icons.FontAwesome}
                   name={isOpened ? "chevron-up" : "chevron-down"}
                   color={Colors.black}
                   size={18}

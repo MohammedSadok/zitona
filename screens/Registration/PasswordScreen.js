@@ -10,14 +10,13 @@ import {
 import Colors from "../../constants/Colors";
 import Input from "../../components/general/Input";
 
-const PasswordScreen = ({ navigation }) => {
+const PasswordScreen = ({ navigation, route }) => {
   const [inputs, setInputs] = React.useState({
     password: "",
     confirmation: "",
   });
   const [errors, setErrors] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
-
+  const { user } = route.params;
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -40,8 +39,7 @@ const PasswordScreen = ({ navigation }) => {
     }
 
     if (isValid) {
-      // register();
-      console.log(inputs);
+      console.log({ user: { motDePasse: inputs.password, ...user } });
     }
   };
 
@@ -84,9 +82,11 @@ const PasswordScreen = ({ navigation }) => {
             password
             pwd
           />
-          <View className='flex-row items-center justify-between'>
+          <View className="flex-row items-center justify-between">
             <TouchableOpacity
-              onPress={() => navigation.navigate("MailAndPhoneScreen")}
+              onPress={() =>
+                navigation.navigate("MailAndPhoneScreen", { user: { ...user } })
+              }
               className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
               style={{ backgroundColor: Colors.red }}
             >

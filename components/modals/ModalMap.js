@@ -7,15 +7,12 @@ import {
 } from "@expo-google-fonts/mulish";
 import MapView, { Marker } from "react-native-maps";
 import React, { useState, useEffect } from "react";
-import * as Location from "expo-location";
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 import Icon, { Icons } from "../general/Icons";
 import Colors from "../../constants/Colors";
 
-const ModalPopUp = ({ isVisible, setIsVisible, children, title,changeVisibility }) => {
-
-
+const ModalPopUp = ({ isVisible, children, title, changeVisibility }) => {
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -54,47 +51,16 @@ const ModalPopUp = ({ isVisible, setIsVisible, children, title,changeVisibility 
     )
   );
 };
-const ModalMap = ({ isVisible, ok, cancel, changeVisibility }) => {
-
-  const [marker, setMarker] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [error, setError] = useState(false);
-
-  const handleMapPress = (event) => {
-    const { coordinate } = event.nativeEvent;
-    setMarker({
-      coordinate,
-    });
-  };
-  const check = () => {
-    if (marker === null) {
-      resultError = true;
-    } else {
-      resultError = false;
-      changeVisibility();
-    }
-
-    setError(resultError);
-  };
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let { coords } = await Location.getCurrentPositionAsync({});
-
-      setLocation({
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    })();
-  }, []);
+const ModalMap = ({
+  isVisible,
+  ok,
+  cancel,
+  changeVisibility,
+  marker,
+  error,
+  check,
+  handleMapPress,
+}) => {
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -105,15 +71,10 @@ const ModalMap = ({ isVisible, ok, cancel, changeVisibility }) => {
   return (
     <ModalPopUp
       isVisible={isVisible}
-      setIsVisible={changeVisibility}
       title={"Maps"}
       changeVisibility={changeVisibility}
     >
-      <MapView
-        onPress={handleMapPress}
-        className="flex-1 rounded-lg"
-        initialRegion={location}
-      >
+      <MapView onPress={handleMapPress} className="flex-1 rounded-lg">
         {marker && <Marker coordinate={marker.coordinate} />}
       </MapView>
 

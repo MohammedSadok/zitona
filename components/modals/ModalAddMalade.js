@@ -30,6 +30,7 @@ const width = Dimensions.get("screen").width;
 const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const dispatch = useDispatch();
   const parcelle = useSelector((state) => state.parcelles.parcelle);
+  const { token } = useSelector((state) => state.userAuth);
   const [errors, setErrors] = useState({});
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -101,8 +102,8 @@ const ModalAddMalade = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     }
     if (isValid) {
       inputs.date = formatDate(date);
-      if (malade && id !== 0) dispatch(updateMalade(inputs));
-      else dispatch(createMalade(inputs));
+      if (malade && id !== 0) dispatch(updateMalade({ malade: inputs, token: token }));
+      else dispatch(createMalade({ malade: inputs, token: token }));
       ok();
     }
   };

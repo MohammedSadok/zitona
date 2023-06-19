@@ -38,7 +38,7 @@ const ModalAddFertilisation = ({
   const fertilisation = useSelector((state) =>
     state.fertilisations.fertilisations.find((element) => element.id === id)
   );
-
+  const { token } = useSelector((state) => state.userAuth);
   const { parcelle } = useSelector((state) => state.parcelles);
   const [inputs, setInputs] = useState({
     date: new Date(),
@@ -120,8 +120,8 @@ const ModalAddFertilisation = ({
     if (isValid) {
       inputs.date = formatDate(date);
       if (fertilisation && id !== 0) 
-        dispatch(updateFertilisation(inputs));
-       else dispatch(createFertilisation(inputs));
+        dispatch(updateFertilisation({ fertilisation: inputs, token: token }));
+       else dispatch(createFertilisation({ fertilisation: inputs, token: token }));
       ok();
     }
   };

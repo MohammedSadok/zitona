@@ -9,8 +9,6 @@ const NameScreen = ({ navigation }) => {
     lastName: "",
   });
   const [errors, setErrors] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
-
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -22,16 +20,17 @@ const NameScreen = ({ navigation }) => {
     Keyboard.dismiss();
     let isValid = true;
     if (!inputs.firstName) {
-      handleError("Please input firstName", "firstName");
+      handleError("Veuillez entrer le prénom", "firstName");
       isValid = false;
     }
     if (!inputs.lastName) {
-      handleError("Please input lastName", "lastName");
+      handleError("Veuillez entrer le nom", "lastName");
       isValid = false;
     }
     if (isValid) {
-      // register();
-      console.log(inputs);
+      navigation.navigate("MailAndPhoneScreen", {
+        user: { prenom: inputs.firstName, nom: inputs.lastName },
+      });
     }
   };
   return (
@@ -39,7 +38,7 @@ const NameScreen = ({ navigation }) => {
       style={{
         backgroundColor: Colors.backgroundColor,
       }}
-      className='flex-1 px-5 pt-10'
+      className="flex-1 px-5 pt-10"
     >
       <Text style={{ color: Colors.black, fontSize: 40, fontWeight: "bold" }}>
         Register
@@ -74,7 +73,7 @@ const NameScreen = ({ navigation }) => {
             <Text className="text-xl font-bold text-white text-c">Retoure</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("MailAndPhoneScreen")}
+            onPress={validate}
             className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
             style={{ backgroundColor: Colors.green }}
           >

@@ -7,10 +7,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useState } from "react";
-import Item from "../components/Item";
+import Item from "../components/Items/Item";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ModalPopUp from "../components/modals/ModalPopUp";
-import { logout } from "../services/UserService";
+import { logout } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useFonts,
@@ -19,6 +19,7 @@ import {
 } from "@expo-google-fonts/mulish";
 import Colors from "../constants/Colors";
 import Icon, { Icons } from "../components/general/Icons";
+import ModalPassword from "../components/modals/ModalPassword";
 const Profile = ({ navigation }) => {
   const { parcelles, loading, error, parcelle } = useSelector(
     (state) => state.parcelles
@@ -26,6 +27,7 @@ const Profile = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
+  const [isVisibleP, setIsVisibleP] = useState(false);
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -71,6 +73,11 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
       </ModalPopUp>
+      <ModalPassword
+        cancel={() => setIsVisibleP(false)}
+        ok={() => navigation.navigate("Privacy")}
+        isVisible={isVisibleP}
+      />
       <View className="flex-col items-center justify-center mt-2">
         <View className="w-24 h-24">
           <ImageBackground
@@ -158,7 +165,7 @@ const Profile = ({ navigation }) => {
           width={17}
           height={20}
           color={"#E0FDFF"}
-          handleClick={() => navigation.navigate("Privacy")}
+          handleClick={() => setIsVisibleP(true)}
         />
         <Item
           title={"Portefeuille"}

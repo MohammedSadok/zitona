@@ -2,9 +2,9 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import AddNew from "../components/AddNew";
+import AddNew from "../components/general/AddNew";
 import BarChartView from "../components/charts/BarChart";
-import RecoltItem from "../components/RecoltItem";
+import RecoltItem from "../components/Items/RecoltItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import ModalAddRecolt from "../components/modals/ModalAddRecolt";
@@ -29,6 +29,7 @@ const Recolt = ({ navigation }) => {
   const dispatch = useDispatch();
   const { recolts, loading, error } = useSelector((state) => state.recolts);
   const { parcelle } = useSelector((state) => state.parcelles);
+  const { token } = useSelector((state) => state.userAuth);
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState({
     isVisibleDelete: false,
@@ -36,10 +37,12 @@ const Recolt = ({ navigation }) => {
     isVisibleAdd: false,
   });
   useEffect(() => {
-    dispatch(fetchRecolts(parcelle.id));
+    dispatch(fetchRecolts({ id: parcelle.id, token: token }));
   }, [dispatch]);
   const data = {
-    labels: recolts.map((recolt) => recolt.date),
+    labels: recolts.map((recolt) =>
+      recolt.date.substring(2).replace(/-/g, "/")
+    ),
     datasets: [
       {
         data: recolts.map((recolt) => recolt.quantite),
@@ -78,12 +81,12 @@ const Recolt = ({ navigation }) => {
       <AddNew
         open={() => setItem((prev) => ({ ...prev, isVisibleAdd: true, id: 0 }))}
       />
-      <Loader visible={loading}/>
+      <Loader visible={loading} />
       <ModalDeleteParseil
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteRecolt(item.id));
+          dispatch(deleteRecolt({ id: item.id, token: token }));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />
@@ -102,9 +105,11 @@ const Recolt = ({ navigation }) => {
           }));
         }}
       />
-      <View className="mx-2 mt-2 h-1/3 rounded-xl">
-        <BarChartView color={"blue"} data={data} />
-      </View>
+      {recolts.length > 0 && (
+        <View className="mx-2 mt-2 h-1/3 rounded-xl">
+          <BarChartView color={"blue"} data={data} />
+        </View>
+      )}
       <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <Menu

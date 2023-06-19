@@ -7,6 +7,7 @@ const ItemTritement = ({
   description,
   date,
   toggleModalUpdate,
+  cout,
 }) => {
   return (
     <TouchableOpacity
@@ -24,9 +25,24 @@ const ItemTritement = ({
       }}
       onLongPress={toggleModalUpdate}
     >
-      <Text style={{ fontFamily: "Mulish_700Bold" }} className="text-lg">{typeTraitement}</Text>
+      <View className="flex-row items-center justify-between">
+        <Text style={{ fontFamily: "Mulish_700Bold" }} className="text-lg">
+          {typeTraitement}
+        </Text>
+        <Text
+          style={{ fontFamily: "Mulish_400Regular" }}
+          className="text-sm text-red-500"
+        >
+          {cout} Dh
+        </Text>
+      </View>
       <Text style={{ fontFamily: "Mulish_400Regular" }}>{description}</Text>
-      <Text style={{ fontFamily: "Mulish_400Regular" }} className="text-xs text-right text-gray-400">{date}</Text>
+      <Text
+        style={{ fontFamily: "Mulish_400Regular" }}
+        className="text-xs text-right text-gray-400"
+      >
+        {date}
+      </Text>
     </TouchableOpacity>
   );
 };

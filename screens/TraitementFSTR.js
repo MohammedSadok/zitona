@@ -5,15 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTraitementPhytosanitaires } from "../redux/maladeSlice";
 import Loader from "../components/general/Loader";
 import Colors from "../constants/Colors";
-import ItemTraitementPhytosanitaires from "../components/ItemTraitementPhytosanitaires";
-const Traitement = ({ navigation, route }) => {
+import ItemTraitementPhytosanitaires from "../components/Items/ItemTraitementPhytosanitaires";
+const TraitementFSTR = ({ navigation, route }) => {
   const { id } = route.params;
   const dispatch = useDispatch();
   const { traitement, loading, error } = useSelector((state) => state.malades);
+  const { token } = useSelector((state) => state.userAuth);
   useEffect(() => {
-    dispatch(fetchTraitementPhytosanitaires(id));
+    dispatch(fetchTraitementPhytosanitaires({ id: id, token: token }));
   }, [dispatch]);
-
   const Items = ({ item }) => {
     return (
       <ItemTraitementPhytosanitaires
@@ -40,10 +40,12 @@ const Traitement = ({ navigation, route }) => {
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <Text className="mt-6 text-xl font-bold text-center">Aucun traitement phytosanitaire !</Text>
+        <Text className="mt-6 text-xl font-bold text-center">
+          Aucun traitement phytosanitaire !
+        </Text>
       )}
     </View>
   );
 };
 
-export default Traitement;
+export default TraitementFSTR;

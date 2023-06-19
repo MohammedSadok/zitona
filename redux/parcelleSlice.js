@@ -8,16 +8,20 @@ const initialState = {
   parcelle: { id: 0 },
 };
 
-const URL = ApiUrl+"/parcelles";
+const URL = ApiUrl + "/parcelles";
 
 export const fetchParcelles = createAsyncThunk(
   "parcelles/fetchParcelles",
-  async (_, thunkAPI) => {
+  async (user, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.get(ApiUrl+"/parcelles/user/1");
+      const response = await axios.get(ApiUrl + "/parcelles/user/" + user.id, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
       const data = response.data.data;
-      return data;
+      return data !== null ? data : [];
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.message);
@@ -27,12 +31,16 @@ export const fetchParcelles = createAsyncThunk(
 
 export const deleteParcelle = createAsyncThunk(
   "parcelles/deleteParcelle",
-  async (id, thunkAPI) => {
+  async (data, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
       // Make a DELETE request to the server with the specified ID
-      const response = await axios.delete(URL + `/${id}`);
-      return id;
+      const response = await axios.delete(URL + `/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return data.id;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -45,7 +53,11 @@ export const createParcelle = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       // Make a POST request to the server with the provided data
-      const response = await axios.post(URL, data);
+      const response = await axios.post(URL, data.parcelle, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
       return response.data.data; // Return the created parcelle object or any relevant data
     } catch (error) {
       return rejectWithValue(error.message);
@@ -59,7 +71,15 @@ export const updateParcelle = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       // Make a PATCH request to the server with the provided data
-      const response = await axios.put(`${URL}/${data.id}`, data);
+      const response = await axios.put(
+        `${URL}/${data.parcelle.id}`,
+        data.parcelle,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
       return response.data.data; // Return the updated parcelle object or any relevant data
     } catch (error) {
       return rejectWithValue(error.message);

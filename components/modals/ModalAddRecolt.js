@@ -39,7 +39,7 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const recolt = useSelector((state) =>
     state.recolts.recolts.find((element) => element.id === id)
   );
-
+  const { token } = useSelector((state) => state.userAuth);
   const { parcelle } = useSelector((state) => state.parcelles);
   const [inputs, setInputs] = useState({
     date: new Date(),
@@ -119,8 +119,9 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     }
     if (isValid) {
       inputs.date = formatDate(date);
-      if (recolt && id !== 0) dispatch(updateRecolt(inputs));
-      else dispatch(createRecolt(inputs));
+      if (recolt && id !== 0)
+        dispatch(updateRecolt({ recolte: inputs, token: token }));
+      else dispatch(createRecolt({ recolte: inputs, token: token }));
       ok();
     }
   };

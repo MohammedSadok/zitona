@@ -27,7 +27,7 @@ const Input = ({
     return null;
   }
   return (
-    <View style={{ marginBottom: iconName ? 20 : 5 }}>
+    <View style={{ marginBottom: iconName ? 10 : 5 }}>
       <Text style={[style.label, { marginVertical: iconName ? 5 : 2 }]}>
         {label}
       </Text>

@@ -5,6 +5,8 @@ import Colors from "../constants/Colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon, { Icons } from "../components/general/Icons";
 import Task from "../components/Task";
+import axios from "axios";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 const slides = {
   fertilisation: require("../assets/navigation/fertiliser.png"),
@@ -12,8 +14,28 @@ const slides = {
   maladie: require("../assets/navigation/maladie.png"),
   recolt: require("../assets/navigation/recolt.png"),
 };
+
 const Bosket = ({ navigation }) => {
   const { parcelle } = useSelector((state) => state.parcelles);
+  useEffect(() => {
+    axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${parcelle.latitude},${parcelle.longitude}&key=YOUR_API_KEY`
+      )
+      .then((response) => {
+        const result = response.data;
+        console.log(response.data);
+        if (result.status === "OK" && result.results.length > 0) {
+          const formattedAddress = result.results[0].formatted_address;
+        } else {
+          console.log("No address found");
+        }
+      })
+      .catch((error) => {
+        console.log("Error retrieving address:", error);
+        console.log("Error retrieving address");
+      });
+  }, []);
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
@@ -49,7 +71,7 @@ const Bosket = ({ navigation }) => {
           img={slides.maladie}
         />
         <Navigate title="Recolt" navigation={navigation} img={slides.recolt} />
-        <Navigate title="NewTask" navigation={navigation} add={true} />
+        <Navigate title="Traitement" navigation={navigation} add={true} />
       </View>
 
       <View
@@ -70,7 +92,7 @@ const Bosket = ({ navigation }) => {
           {parcelle.title}
         </Text>
         <Text style={{ fontFamily: "Mulish_400Regular" }}>
-          {parcelle.localisation}
+          {parcelle.commentaire}
         </Text>
         <View className="flex-row items-center justify-between p-2 px-3">
           <View className="flex-col items-center justify-between space-y-1">

@@ -38,18 +38,27 @@ const oliveVarieties = [
   "Moroccan Amfissa",
 ];
 
-const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
+const ModalAddBosket = ({
+  isVisible,
+  ok,
+  cancel,
+  id,
+  toggleModalMap,
+  marker,
+  initializeMarker,
+}) => {
   const dispatch = useDispatch();
+  const { token, user } = useSelector((state) => state.userAuth);
   const [inputs, setInputs] = useState({
     nom: "",
-    nombreDarbre: 0,
-    varieter: "Picholine",
+    nombreDarbre: "",
+    varieter: "",
     dateDePlantation: new Date(),
     type_darossage: "",
-    debit: 0,
-    localisation: "",
+    debit: "",
+    localisation: {},
     user: {
-      id: 1,
+      id: user.id,
     },
   });
 
@@ -66,30 +75,37 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
       setInputs({
         ...parcelle,
         user: {
-          id: 1,
+          id: user.id,
         },
       });
       if (parcelle.type_darossage !== "") {
         setSelection(true);
         setDate(new Date(inputs.dateDePlantation));
       }
+      initializeMarker({
+        coordinate: {
+          latitude: parseFloat(parcelle.latitude),
+          longitude: parseFloat(parcelle.longitude),
+        },
+      });
     } else {
       setInputs({
         nom: "",
-        nombreDarbre: 0,
-        varieter: "Picholine",
+        nombreDarbre: "",
+        varieter: "",
         dateDePlantation: new Date(),
         type_darossage: "",
-        debit: 0,
-        localisation: "",
+        debit: "",
+        localisation: {},
         user: {
-          id: 1,
+          id: user.id,
         },
       });
       setDate(new Date());
       setSelection(false);
+      initializeMarker(null);
     }
-  }, [id]);
+  }, [id, isVisible]);
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -117,8 +133,12 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
       handleError("Entrer le nombre d'arbre", "nombreDarbre");
       isValid = false;
     }
-    if (!inputs.localisation) {
+    if (marker === null) {
       handleError("Entrer localisation", "localisation");
+      isValid = false;
+    }
+    if (!inputs.varieter) {
+      handleError("Vous devez choisir une varieter !", "varieter");
       isValid = false;
     }
     if (!inputs.debit && isSelected) {
@@ -126,14 +146,14 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
       isValid = false;
     }
     if (isValid) {
+      inputs.dateDePlantation = formatDate(date);
+      const newParcelle = { ...inputs, ...marker.coordinate };
       if (parcelle) {
-        inputs.dateDePlantation = formatDate(date);
-        dispatch(updateParcelle(inputs));
+        dispatch(updateParcelle({ token: token, parcelle: newParcelle }));
         ok();
       } else {
         inputs.type_darossage = "goute a goutte";
-        inputs.dateDePlantation = formatDate(date);
-        dispatch(createParcelle(inputs));
+        dispatch(createParcelle({ token: token, parcelle: newParcelle }));
         ok();
       }
     }
@@ -148,7 +168,10 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
   return (
     <ModalPopUp
       isVisible={isVisible}
-      setIsVisible={cancel}
+      setIsVisible={() => {
+        cancel();
+        setErrors({});
+      }}
       title="Créer un Parseil"
       className="w-11/12"
     >
@@ -180,6 +203,7 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
                 ...prevState,
                 varieter: selectedItem,
               }));
+              setErrors((prevState) => ({ ...prevState, varieter: "" }));
             }}
             defaultButtonText={"Sélectionner la variété"}
             buttonTextAfterSelection={(selectedItem, index) => {
@@ -204,6 +228,9 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
             rowStyle={styles.dropdown2RowStyle}
             rowTextStyle={styles.dropdown2RowTxtStyle}
           />
+          {errors.varieter && (
+            <Text className="mt-1 text-xs text-red-500">{errors.varieter}</Text>
+          )}
           <Text className="my-2">Date de Plantation</Text>
           <TouchableOpacity
             className="flex-row items-center justify-between p-2 border-black rounded-md"
@@ -230,20 +257,54 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
               onChange={handleDateChange}
             />
           )}
-          <View className="flex-row items-center my-2">
-            <Checkbox
-              className="w-6 h-6 rounded-md"
-              value={isSelected}
-              onValueChange={setSelection}
-              color={isSelected ? Colors.green : undefined}
-            />
-            <Text
-              className="ml-2 text-lg"
-              style={{ fontFamily: "Mulish_700Bold" }}
+          <View className="flex-row items-center justify-between mt-2">
+            <View className="flex-row items-center ">
+              <Checkbox
+                className="w-6 h-6 rounded-md"
+                value={isSelected}
+                onValueChange={setSelection}
+                color={isSelected ? Colors.green : undefined}
+              />
+              <Text
+                className="ml-2 text-lg"
+                style={{ fontFamily: "Mulish_700Bold" }}
+              >
+                L 'arossage?
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={toggleModalMap}
+              className="flex-row items-center justify-center px-2  py-1.5 rounded-lg"
+              style={{
+                borderColor:
+                  errors.localisation && marker === null
+                    ? Colors.red
+                    : Colors.green,
+                borderWidth: 2,
+              }}
             >
-              L 'arossage?
-            </Text>
+              <Text
+                className="text-xl"
+                style={{ fontFamily: "Mulish_700Bold", color: Colors.green }}
+              >
+                Map
+              </Text>
+              <Icon
+                type={Icons.Ionicons}
+                name="location-sharp"
+                size={24}
+                color={Colors.green}
+              />
+            </TouchableOpacity>
           </View>
+          {errors.localisation && marker === null && (
+            <Text
+              className="mt-0.5 text-xs text-right text-red-400"
+              style={{ fontFamily: "Mulish_400Regular" }}
+            >
+              Click pour choisire localisation
+            </Text>
+          )}
           {isSelected && (
             <Input
               keyboardType="numeric"
@@ -255,26 +316,6 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
               value={inputs.debit + ""}
             />
           )}
-          {/* <Input
-            onChangeText={(text) => handleOnchange(text, "localisation")}
-            onFocus={() => handleError(null, "localisation")}
-            label="Adresse"
-            placeholder="Adresse du parseil d'oliviers ..."
-            error={errors.localisation}
-            value={inputs.localisation}
-          /> */}
-          <TouchableOpacity
-            onPress={toggleModalMap}
-            className="flex-row items-center justify-center px-4 my-3 rounded-lg"
-            style={{ backgroundColor: Colors.blue }}
-          >
-            <Text
-              className="text-lg text-white"
-              style={{ fontFamily: "Mulish_700Bold" }}
-            >
-              Enregistrer
-            </Text>
-          </TouchableOpacity>
           <View className="flex-row-reverse">
             <TouchableOpacity
               onPress={validate}
@@ -289,7 +330,10 @@ const ModalAddBosket = ({ isVisible, ok, cancel, id, toggleModalMap }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={cancel}
+              onPress={() => {
+                cancel();
+                setErrors({});
+              }}
               className="flex-row items-center justify-center px-4 py-3 my-3 mr-3 rounded-lg"
               style={{ backgroundColor: Colors.red }}
             >

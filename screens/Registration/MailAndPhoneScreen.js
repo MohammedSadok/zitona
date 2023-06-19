@@ -10,34 +10,41 @@ import {
 import Colors from "../../constants/Colors";
 import Input from "../../components/general/Input";
 
-const MailAndPhoneScreen = ({ navigation }) => {
+const MailAndPhoneScreen = ({ navigation, route }) => {
   const [inputs, setInputs] = React.useState({
     email: "",
     emailConfirmation: "",
     phone: "",
   });
   const [errors, setErrors] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
+  const { user } = route.params;
 
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
 
     if (!inputs.email) {
-      handleError("Please input email", "email");
+      handleError("Veuillez entrer email", "email");
       isValid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError("Veuillez entrer un mail valide", "email");
       isValid = false;
     }
-
+    if (inputs.email != inputs.emailConfirmation) {
+      handleError(
+        "L'email et la confirmation de l'email ne correspondent pas.",
+        "emailConfirmation"
+      );
+      isValid = false;
+    }
     if (!inputs.phone) {
-      handleError("Please input phone number", "phone");
+      handleError("Veuillez entrer le numéro de téléphone", "phone");
       isValid = false;
     }
     if (isValid) {
-      // register();
-      console.log(inputs);
+      navigation.navigate("PasswordScreen", {
+        user: { email: inputs.email, telephone: inputs.phone, ...user },
+      });
     }
   };
 
@@ -81,13 +88,17 @@ const MailAndPhoneScreen = ({ navigation }) => {
             onChangeText={(text) => handleOnchange(text, "phone")}
             onFocus={() => handleError(null, "phone")}
             iconName="phone-outline"
-            label="Phone Number"
-            placeholder="Enter your phone number"
+            label="Numéro de téléphone"
+            placeholder="Enter votre numéro de téléphone"
             error={errors.phone}
           />
           <View className="flex-row items-center justify-between">
             <TouchableOpacity
-              onPress={() => navigation.navigate("NameScreen")}
+              onPress={() =>
+                navigation.navigate("MailAndPhoneScreen", {
+                  user: { ...user }
+                })
+              }
               className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
               style={{ backgroundColor: Colors.red }}
             >
@@ -96,7 +107,7 @@ const MailAndPhoneScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("PasswordScreen")}
+              onPress={validate}
               className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
               style={{ backgroundColor: Colors.green }}
             >

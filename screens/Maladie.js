@@ -2,8 +2,8 @@ import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import AddNew from "../components/AddNew";
-import MaladeItem from "../components/MaladeItem";
+import AddNew from "../components/general/AddNew";
+import MaladeItem from "../components/Items/MaladeItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteMalade,
@@ -21,6 +21,7 @@ const Maladie = ({ navigation }) => {
   const dispatch = useDispatch();
   const { malades, loading, error } = useSelector((state) => state.malades);
   const { parcelle } = useSelector((state) => state.parcelles);
+  const { token } = useSelector((state) => state.userAuth);
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState({
     isVisibleDelete: false,
@@ -29,8 +30,8 @@ const Maladie = ({ navigation }) => {
   });
 
   useEffect(() => {
-    dispatch(fetchMalades(parcelle.id));
-    dispatch(fetchListMaladie());
+    dispatch(fetchMalades({ id: parcelle.id, token: token }));
+    dispatch(fetchListMaladie({ token: token }));
   }, [dispatch]);
 
   const Items = ({ item }) => {
@@ -57,7 +58,7 @@ const Maladie = ({ navigation }) => {
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteMalade(item.id));
+          dispatch(deleteMalade({ id: item.id, token: token }));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />
@@ -79,30 +80,6 @@ const Maladie = ({ navigation }) => {
       <AddNew
         open={() => setItem((prev) => ({ ...prev, isVisibleAdd: true, id: 0 }))}
       />
-      {/* <View className="flex-row items-center justify-between p-2 mx-2">
-        <PieChart data={data} />
-        <View className="">
-          <View className="flex-row items-center space-x-7">
-            <View className="w-5 h-5"></View>
-            <Text className="text-gray-600">Label</Text>
-            <Text className="text-gray-600">Value</Text>
-            <Text className="text-gray-600">%</Text>
-          </View>
-          <View>
-            {data.map((item, index) => (
-              <View className="flex-row items-center p-1 space-x-6" key={index}>
-                <View
-                  className="w-5 h-5 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                ></View>
-                <Text className="text-gray-600">Label 1</Text>
-                <Text className="font-bold">{item.value}</Text>
-                <Text className="font-bold">22%</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </View> */}
       <View className="flex-row items-center justify-between m-3">
         <Text className="text-xl font-bold">Historique</Text>
 

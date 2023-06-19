@@ -4,7 +4,7 @@ import BarChartView from "../components/charts/BarChart";
 import { Feather } from "@expo/vector-icons";
 import PieChart from "../components/charts/PieChart";
 import Colors from "../constants/Colors";
-import AddNew from "../components/AddNew";
+import AddNew from "../components/general/AddNew";
 import { useSelector, useDispatch } from "react-redux";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
 import {
@@ -15,7 +15,7 @@ import {
   sortByQuantite,
   sortByTypeDengrais,
 } from "../redux/fertilisationSlice";
-import FertilisationItem from "../components/FertilisationItem";
+import FertilisationItem from "../components/Items/FertilisationItem";
 import Loader from "../components/general/Loader";
 import ModalAddFertilisation from "../components/modals/ModalAddFertilisation";
 import ModalDeleteParseil from "../components/modals/ModalDeleteParseil";
@@ -31,9 +31,9 @@ const Fertilisation = ({ navigation }) => {
     (state) => state.fertilisations
   );
   const { parcelle } = useSelector((state) => state.parcelles);
-
+  const { token } = useSelector((state) => state.userAuth);
   useEffect(() => {
-    dispatch(fetchFertilisations(parcelle.id));
+    dispatch(fetchFertilisations({ id: parcelle.id, token: token }));
   }, [dispatch]);
 
   const Items = ({ item }) => {
@@ -65,7 +65,7 @@ const Fertilisation = ({ navigation }) => {
         isVisible={item.isVisibleDelete}
         cancel={() => setItem((prev) => ({ ...prev, isVisibleDelete: false }))}
         ok={() => {
-          dispatch(deleteFertilisation(item.id));
+          dispatch(deleteFertilisation({ id: item.id, token: token }));
           setItem((prev) => ({ ...prev, isVisibleDelete: false }));
         }}
       />

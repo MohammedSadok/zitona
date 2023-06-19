@@ -2,22 +2,24 @@ import BosketsScreen from "../screens/profile/BosketsScreen";
 import BottomNavigation from "./BottomNavigation";
 import LoginNavigation from "./LoginNavigation";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { checkLoggedInUser } from "../services/UserService";
-const MainNavigation = () => {
-  const isAuthenticated = useSelector(
-    (state) => state.userAuth.isAuthenticated
-  );
-  const { parcelle } = useSelector((state) => state.parcelles);
-  const dispatch = useDispatch();
+import { useSelector, useDispatch } from "react-redux";
+import { checkUserIfExist } from "../redux/authSlice";
 
-  // useEffect(() => {
-  //   dispatch(checkLoggedInUser());
-  // }, [dispatch]);
-  if (isAuthenticated) {
+const MainNavigation = () => {
+  const dispatch = useDispatch();
+  const { parcelle } = useSelector((state) => state.parcelles);
+  const { user, token } = useSelector((state) => state.userAuth);
+  useEffect(() => {
+    dispatch(checkUserIfExist());
+  }, [dispatch]);
+  if (user) {
     if (parcelle.id === 0) {
       return <BosketsScreen />;
-    } else return <BottomNavigation />;
-  } else return <LoginNavigation />;
+    } else {
+      return <BottomNavigation />;
+    }
+  } else {
+    return <LoginNavigation />;
+  }
 };
 export default MainNavigation;
