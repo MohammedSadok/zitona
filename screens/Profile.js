@@ -24,7 +24,6 @@ const Profile = ({ navigation }) => {
   const { parcelles, loading, error, parcelle } = useSelector(
     (state) => state.parcelles
   );
-
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleP, setIsVisibleP] = useState(false);
@@ -37,7 +36,7 @@ const Profile = ({ navigation }) => {
   }
   return (
     <SafeAreaView
-      className="flex-col items-center justify-between flex-1 px-2"
+      className="flex-col items-center justify-between flex-1 px-2 "
       style={{ backgroundColor: Colors.backgroundColor }}
     >
       <ModalPopUp
@@ -97,7 +96,7 @@ const Profile = ({ navigation }) => {
         <Text className="my-2 text-2xl font-bold">Mohammed Sadok</Text>
       </View>
       <View
-        className="flex-col justify-between w-full p-2 pb-0 bg-white rounded-md"
+        className="flex-col justify-between w-full p-2 m-2 bg-white rounded-md"
         style={{
           shadowColor: "#000",
           shadowOffset: {
@@ -110,12 +109,10 @@ const Profile = ({ navigation }) => {
           elevation: 1,
         }}
       >
-        <Text className="text-lg font-bold">About</Text>
-        <Text style={{ fontFamily: "Mulish_400Regular" }}>
-          des information generale sur le bosquet localisation ...des
-          information generale sur le bosquet localisation ...
+        <Text className="mb-2 text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
+          {parcelle.title}
         </Text>
-        <View className="flex-row items-center justify-between p-2 mx-2 mt-1">
+        <View className="flex-row items-center justify-between px-3">
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
               color={"#606C38"}
@@ -123,8 +120,8 @@ const Profile = ({ navigation }) => {
               type={Icons.FontAwesome5}
               size={30}
             />
-            <Text style={styles.text}>arbre d'olivier</Text>
-            <Text style={styles.textBold}>15</Text>
+            <Text style={styles.text}>{parcelle.varieter}</Text>
+            <Text style={styles.textBold}>{parcelle.nombreDarbre}</Text>
           </View>
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
@@ -134,11 +131,15 @@ const Profile = ({ navigation }) => {
               size={30}
             />
             <Text style={styles.text}>arrosage</Text>
-            <Text style={styles.textBold}>3 m3</Text>
+            <View className="flex-row">
+              <Text style={styles.textBold}>{parcelle.debit} m</Text>
+              <Text className="text-xs relatives bottom-1">3</Text>
+              <Text style={styles.textBold}>/h</Text>
+            </View>
           </View>
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
-              color={"#228BB8"}
+              color={"#6247aa"}
               name={"fruit-cherries"}
               type={Icons.MaterialCommunityIcons}
               size={30}
@@ -167,15 +168,15 @@ const Profile = ({ navigation }) => {
           color={"#E0FDFF"}
           handleClick={() => setIsVisibleP(true)}
         />
-        <Item
+        {/* <Item
           title={"Portefeuille"}
           text={"Liste des dépenses"}
           image={require("../assets/profile/protfolio.png")}
           width={20}
           height={18}
           color={"#F1E0FF"}
-          handleClick={() => navigation.navigate("Portfolio")}
-        />
+          handleClick={() => navigation.navigate("Portefeuille")}
+        /> */}
         <Item
           title={"Notifications"}
           text={"Liste des notifications"}

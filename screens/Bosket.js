@@ -75,7 +75,7 @@ const Bosket = ({ navigation }) => {
       </View>
 
       <View
-        className="flex-col justify-between p-2 pb-0 m-2 bg-white rounded-md"
+        className="flex-col justify-between p-2 m-2 bg-white rounded-md"
         style={{
           shadowColor: "#000",
           shadowOffset: {
@@ -88,13 +88,10 @@ const Bosket = ({ navigation }) => {
           elevation: 1,
         }}
       >
-        <Text className="mb-1 text-lg font-bold leading-5 overflow-ellipsis">
+        <Text className="mb-2 text-xl" style={{fontFamily:"Mulish_700Bold"}}>
           {parcelle.title}
         </Text>
-        <Text style={{ fontFamily: "Mulish_400Regular" }}>
-          {parcelle.commentaire}
-        </Text>
-        <View className="flex-row items-center justify-between p-2 px-3">
+        <View className="flex-row items-center justify-between px-3">
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
               color={"#606C38"}
@@ -121,7 +118,7 @@ const Bosket = ({ navigation }) => {
           </View>
           <View className="flex-col items-center justify-between space-y-1">
             <Icon
-              color={"#228BB8"}
+              color={"#6247aa"}
               name={"fruit-cherries"}
               type={Icons.MaterialCommunityIcons}
               size={30}

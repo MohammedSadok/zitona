@@ -36,7 +36,7 @@ const ProfileNavigation = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Notifications" component={NotificationScreen} />
-      <Stack.Screen name="Portfolio" component={PortfolioScreen} />
+      <Stack.Screen name="Portefeuille" component={PortfolioScreen} />
       <Stack.Screen name="Boskets" component={BosketsScreen} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} />
     </Stack.Navigator>

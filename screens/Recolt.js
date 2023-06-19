@@ -1,6 +1,13 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
+import Icon, { Icons } from "../components/general/Icons";
 import Colors from "../constants/Colors";
 import AddNew from "../components/general/AddNew";
 import BarChartView from "../components/charts/BarChart";
@@ -25,30 +32,57 @@ import {
   sortByQuality,
   sortByQuantite,
 } from "../redux/recoltSlice";
+import { color } from "react-native-reanimated";
 const Recolt = ({ navigation }) => {
   const dispatch = useDispatch();
   const { recolts, loading, error } = useSelector((state) => state.recolts);
   const { parcelle } = useSelector((state) => state.parcelles);
   const { token } = useSelector((state) => state.userAuth);
   const [visible, setVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(1);
   const [item, setItem] = useState({
     isVisibleDelete: false,
     id: 0,
     isVisibleAdd: false,
   });
+
   useEffect(() => {
     dispatch(fetchRecolts({ id: parcelle.id, token: token }));
   }, [dispatch]);
+
+  const itemsPerPage = 7; // Number of items to display per page
+  const getRecoltesPage = (_index) => {
+    const start = (_index - 1) * itemsPerPage;
+    const end = _index * itemsPerPage;
+    return recolts.slice(start, end);
+  };
+
+  const goToPage = (index) => {
+    setCurrentIndex(index);
+  };
+  // Function to navigate to the previous page
+  const prevPage = () => {
+    if (currentIndex > 1) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+  // Function to navigate to the next page
+  const nextPage = () => {
+    if (currentIndex < Math.ceil(recolts.length / itemsPerPage)) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
   const data = {
-    labels: recolts.map((recolt) =>
+    labels: getRecoltesPage(currentIndex).map((recolt) =>
       recolt.date.substring(2).replace(/-/g, "/")
     ),
     datasets: [
       {
-        data: recolts.map((recolt) => recolt.quantite),
+        data: getRecoltesPage(currentIndex).map((recolt) => recolt.quantite),
       },
     ],
   };
+
   const Items = ({ item }) => {
     return (
       <RecoltItem
@@ -105,11 +139,63 @@ const Recolt = ({ navigation }) => {
           }));
         }}
       />
-      {recolts.length > 0 && (
-        <View className="mx-2 mt-2 h-1/3 rounded-xl">
-          <BarChartView color={"blue"} data={data} />
+      {getRecoltesPage.length > 0 && (
+        <View className="mx-2 mt-2 h-1/3 rounded-xl" style={styles.chart}>
+          <BarChartView color={Colors.blue} data={data} />
         </View>
       )}
+      <View className="flex-row items-center justify-between mx-2 my-1">
+        <TouchableOpacity
+          onPress={prevPage}
+          className="flex-row items-center justify-center mr-2 bg-green-700 rounded-lg w-7 h-7"
+          style={styles.item}
+        >
+          <Icon
+            type={Icons.AntDesign}
+            name={"left"}
+            color={Colors.white}
+            size={24}
+          />
+        </TouchableOpacity>
+        <View className="flex-row">
+          {recolts.length > itemsPerPage &&
+            Array.from({
+              length: Math.ceil(recolts.length / itemsPerPage),
+            }).map((_, index) => (
+              <TouchableOpacity
+                onPress={() => goToPage(index + 1)}
+                className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
+                key={index + 1}
+                style={[
+                  styles.item,
+                  {
+                    backgroundColor:
+                      index + 1 === currentIndex ? Colors.blue : Colors.gray,
+                  },
+                ]}
+              >
+                <Text
+                  style={{ fontFamily: "Mulish_700Bold" }}
+                  className="text-base text-white"
+                >
+                  {index + 1}
+                </Text>
+              </TouchableOpacity>
+            ))}
+        </View>
+        <TouchableOpacity
+          onPress={nextPage}
+          className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
+          style={styles.item}
+        >
+          <Icon
+            type={Icons.AntDesign}
+            name={"right"}
+            color={Colors.white}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
       <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <Menu
@@ -193,4 +279,17 @@ const Recolt = ({ navigation }) => {
   );
 };
 
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: Colors.blue,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5.62,
+    elevation: 8,
+  },
+});
 export default Recolt;
