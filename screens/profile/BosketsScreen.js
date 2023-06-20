@@ -27,6 +27,7 @@ const BosketsScreen = () => {
     require("../../assets/background-parcelle/6.png"),
     require("../../assets/background-parcelle/7.png"),
     require("../../assets/background-parcelle/8.png"),
+    require("../../assets/background-parcelle/9.png"),
   ];
 
   const dispatch = useDispatch();
@@ -100,7 +101,7 @@ const BosketsScreen = () => {
         toggleModalUpdate={() => {
           setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }));
         }}
-        image={randomImages[item.id]}
+        image={randomImages[item.id%10]}
       />
     );
   };

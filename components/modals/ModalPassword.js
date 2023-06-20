@@ -9,9 +9,10 @@ import React from "react";
 import ModalPopUp from "./ModalPopUp";
 import Colors from "../../constants/Colors";
 import Input from "../general/Input";
+import { useSelector } from "react-redux";
 const width = Dimensions.get("screen").width;
-const height = Dimensions.get("screen").height;
 const ModalPassword = ({ isVisible, ok, cancel }) => {
+  const { user } = useSelector((state) => state.userAuth);
   const [inputs, setInputs] = React.useState({
     password: "",
   });
@@ -19,7 +20,7 @@ const ModalPassword = ({ isVisible, ok, cancel }) => {
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
-    if (inputs.password !== "123456") {
+    if (inputs.password !== user.password) {
       handleError("le mot de passe est incorrecte", "password");
       isValid = false;
     }

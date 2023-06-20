@@ -11,13 +11,13 @@ import {
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
+
 const BosketItem = ({
   id,
   title,
   nombreDarbre,
   varieter,
   date_de_plantations,
-  type_darossage,
   latitude,
   longitude,
   debit,
@@ -39,7 +39,7 @@ const BosketItem = ({
   }
   return (
     <TouchableOpacity
-      className="flex-row mb-2 overflow-hidden bg-white border-4 rounded-lg"
+      className="flex-row mb-1 overflow-hidden bg-white border-4 rounded-lg"
       style={[styles.container, { borderColor: backgroundColor }]}
       onPress={() => {
         dispatch(
@@ -56,27 +56,53 @@ const BosketItem = ({
         );
       }}
     >
-      <View className="flex-col justify-between w-4/6 px-2 pb-2">
+      <View className="flex-col justify-between w-4/6 px-2">
         <Text style={{ fontFamily: "Mulish_700Bold" }} className="h-6 text-xl">
           {title}
         </Text>
         <View className="flex-row items-baseline justify-between">
           <Text style={{ fontFamily: "Mulish_400Regular" }} className="text-xl">
-            {nombreDarbre}{" "}
+            {nombreDarbre}
             <Icon
-              type={Icons.FontAwesome}
+              type={Icons.MaterialCommunityIcons}
               name={"tree"}
-              color={"green"}
-              size={18}
-            />{" "}
+              color={Colors.green}
+              size={24}
+            />
             {varieter}
           </Text>
-          <Text className="text-xs text-slate-700">{date_de_plantations}</Text>
         </View>
-        <Text>
-          Arrosage {type_darossage} debit {debit} m3/min
-        </Text>
-        {/* <Text className="text-sm text-slate-600">{localisation}</Text> */}
+        <View className="flex-row-reverse items-center justify-between">
+          <Text
+            className="text-xs text-right text-slate-500"
+            style={{ fontFamily: "Mulish_400Regular" }}
+          >
+            {date_de_plantations}
+          </Text>
+          {parseInt(debit) > 0 ? (
+            <View className="flex-row items-center justify-between">
+              <Icon
+                type={Icons.MaterialCommunityIcons}
+                name={"water"}
+                size={24}
+                color={Colors.blue}
+              />
+              <Text
+                className="text-xs"
+                style={{ fontFamily: "Mulish_700Bold", color: Colors.blue }}
+              >
+                {debit} m3/min
+              </Text>
+            </View>
+          ) : (
+            <Icon
+              type={Icons.MaterialCommunityIcons}
+              name={"water-off"}
+              size={24}
+              color={Colors.gray}
+            />
+          )}
+        </View>
       </View>
       <View className="relative flex-col items-center justify-center w-2/6 overflow-hidden">
         <View className="self-end mr-1">
@@ -90,8 +116,8 @@ const BosketItem = ({
                 <Icon
                   type={Icons.Feather}
                   name={"settings"}
-                  color={Colors.green}
-                  size={20}
+                  color={Colors.black}
+                  size={22}
                 />
               </TouchableOpacity>
             }
@@ -132,23 +158,23 @@ const BosketItem = ({
             </MenuItem>
           </Menu>
         </View>
-        <Image className="w-full h-5/6" resizeMode="cover" source={image} />
+        <Image className="w-full h-5/6" resizeMode="contain" source={image} />
       </View>
     </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    height: 130,
+    height: 100,
     borderColor: Colors.white,
-    shadowColor: "#000",
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    shadowOpacity: 0.17,
+    shadowRadius: 2.54,
+    elevation: 3,
   },
   option: {
     fontFamily: "Mulish_700Bold",

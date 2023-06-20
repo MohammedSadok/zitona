@@ -22,9 +22,15 @@ export const login = createAsyncThunk(
         userData
       );
       const data = response.data;
-      await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+      await AsyncStorage.setItem(
+        "userData",
+        JSON.stringify({ ...data.user, password: userData.password })
+      );
       await AsyncStorage.setItem("token", JSON.stringify(data.access_token));
-      return data;
+      return {
+        user: { ...data.user, password: userData.password },
+        token: data.access_token,
+      };
     } catch (error) {
       console.error(error);
       return rejectWithValue(error.message);

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "111685654271",
+    "project_id": "zitona-38238",
+    "storage_bucket": "zitona-38238.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111685654271:android:d349f14d8da5c2e7975eca",
+        "android_client_info": {
+          "package_name": "com.mohammedsadok.zitona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111685654271-pk77kqut143abosj0sl99g1scfgmnus8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohammedsadok.zitona",
+            "certificate_hash": "cc706a8675ff6e300390a0ddd97ab3eafe708857"
+          }
+        },
+        {
+          "client_id": "111685654271-ugpbr1bai6tnoc55snifgs5k9bncbil3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohammedsadok.zitona",
+            "certificate_hash": "4787a6d5c5fa9b56ac270b102fe743f962280aca"
+          }
+        },
+        {
+          "client_id": "111685654271-6iba70t1383t74885ikbr40fo2iuqc16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf5T3pt2JuZCDi2PQr98Q_lA8eunV39RI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111685654271-6iba70t1383t74885ikbr40fo2iuqc16.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

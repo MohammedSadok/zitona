@@ -37,7 +37,7 @@ const BosketNavigation = () => {
         component={Bosket}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Recolt" component={Recolt} />
+      <Stack.Screen name="Recolt" component={Recolt} options={{ title: "Récolte" }}/>
       <Stack.Screen name="Fertilisation" component={Fertilisation} />
       <Stack.Screen name="Maladie" component={Maladie} />
       <Stack.Screen name="TraitementFSTR" component={TraitementFSTR} />

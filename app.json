@@ -18,10 +18,18 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile":"./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.mohammedsadok.zitona"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +41,11 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "462bdf5e-dc41-4785-8f3e-b0a5a38394d8"
+      }
+    }
   }
 }

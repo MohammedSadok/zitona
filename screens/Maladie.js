@@ -125,11 +125,18 @@ const Maladie = ({ navigation }) => {
           </MenuItem>
         </Menu>
       </View>
-      <FlatList
-        data={malades}
-        renderItem={Items}
-        keyExtractor={(item) => item.id}
-      />
+
+      {malades.length > 0 ? (
+        <FlatList
+          data={malades}
+          renderItem={Items}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <Text className="mt-6 text-xl font-bold text-center">
+          Aucune parcelle malade enregistrer !
+        </Text>
+      )}
     </View>
   );
 };

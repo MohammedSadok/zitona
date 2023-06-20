@@ -137,7 +137,7 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     <ModalPopUp
       isVisible={isVisible}
       setIsVisible={cancel}
-      title="Récolt"
+      title="Récolte"
       className="w-11/12"
     >
       <ScrollView className="px-1">

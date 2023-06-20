@@ -21,6 +21,7 @@ import Colors from "../constants/Colors";
 import Icon, { Icons } from "../components/general/Icons";
 import ModalPassword from "../components/modals/ModalPassword";
 const Profile = ({ navigation }) => {
+  const { user } = useSelector((state) => state.userAuth);
   const { parcelles, loading, error, parcelle } = useSelector(
     (state) => state.parcelles
   );
@@ -93,7 +94,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </ImageBackground>
         </View>
-        <Text className="my-2 text-2xl font-bold">Mohammed Sadok</Text>
+        <Text className="my-2 text-2xl font-bold capitalize">{user.prenom + ' ' + user.nom}</Text>
       </View>
       <View
         className="flex-col justify-between w-full p-2 m-2 bg-white rounded-md"

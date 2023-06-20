@@ -32,7 +32,6 @@ import {
   sortByQuality,
   sortByQuantite,
 } from "../redux/recoltSlice";
-import { color } from "react-native-reanimated";
 const Recolt = ({ navigation }) => {
   const dispatch = useDispatch();
   const { recolts, loading, error } = useSelector((state) => state.recolts);
@@ -139,63 +138,65 @@ const Recolt = ({ navigation }) => {
           }));
         }}
       />
-      {getRecoltesPage.length > 0 && (
-        <View className="mx-2 mt-2 h-1/3 rounded-xl" style={styles.chart}>
+      {recolts.length > 0 && (
+        <View className="mx-2 mt-2 bg-white rounded-xl" style={styles.chart}>
           <BarChartView color={Colors.blue} data={data} />
+          <View className="flex-row items-center justify-between mx-2 my-1">
+            <TouchableOpacity
+              onPress={prevPage}
+              className="flex-row items-center justify-center mr-2 bg-green-700 rounded-lg w-7 h-7"
+              style={styles.item}
+            >
+              <Icon
+                type={Icons.AntDesign}
+                name={"left"}
+                color={Colors.white}
+                size={24}
+              />
+            </TouchableOpacity>
+            <View className="flex-row">
+              {recolts.length > itemsPerPage &&
+                Array.from({
+                  length: Math.ceil(recolts.length / itemsPerPage),
+                }).map((_, index) => (
+                  <TouchableOpacity
+                    onPress={() => goToPage(index + 1)}
+                    className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
+                    key={index + 1}
+                    style={[
+                      styles.item,
+                      {
+                        backgroundColor:
+                          index + 1 === currentIndex
+                            ? Colors.blue
+                            : Colors.gray,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{ fontFamily: "Mulish_700Bold" }}
+                      className="text-base text-white"
+                    >
+                      {index + 1}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+            </View>
+            <TouchableOpacity
+              onPress={nextPage}
+              className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
+              style={styles.item}
+            >
+              <Icon
+                type={Icons.AntDesign}
+                name={"right"}
+                color={Colors.white}
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       )}
-      <View className="flex-row items-center justify-between mx-2 my-1">
-        <TouchableOpacity
-          onPress={prevPage}
-          className="flex-row items-center justify-center mr-2 bg-green-700 rounded-lg w-7 h-7"
-          style={styles.item}
-        >
-          <Icon
-            type={Icons.AntDesign}
-            name={"left"}
-            color={Colors.white}
-            size={24}
-          />
-        </TouchableOpacity>
-        <View className="flex-row">
-          {recolts.length > itemsPerPage &&
-            Array.from({
-              length: Math.ceil(recolts.length / itemsPerPage),
-            }).map((_, index) => (
-              <TouchableOpacity
-                onPress={() => goToPage(index + 1)}
-                className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
-                key={index + 1}
-                style={[
-                  styles.item,
-                  {
-                    backgroundColor:
-                      index + 1 === currentIndex ? Colors.blue : Colors.gray,
-                  },
-                ]}
-              >
-                <Text
-                  style={{ fontFamily: "Mulish_700Bold" }}
-                  className="text-base text-white"
-                >
-                  {index + 1}
-                </Text>
-              </TouchableOpacity>
-            ))}
-        </View>
-        <TouchableOpacity
-          onPress={nextPage}
-          className="flex-row items-center justify-center mr-2 rounded-lg w-7 h-7"
-          style={styles.item}
-        >
-          <Icon
-            type={Icons.AntDesign}
-            name={"right"}
-            color={Colors.white}
-            size={24}
-          />
-        </TouchableOpacity>
-      </View>
       <View className="flex-row items-center justify-between mx-3 mt-1 mb-2">
         <Text className="text-xl font-bold">Historique</Text>
         <Menu
@@ -270,11 +271,18 @@ const Recolt = ({ navigation }) => {
           </MenuItem>
         </Menu>
       </View>
-      <FlatList
-        data={recolts}
-        renderItem={Items}
-        keyExtractor={(item) => item.id}
-      />
+
+      {recolts.length > 0 ? (
+        <FlatList
+          data={recolts}
+          renderItem={Items}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <Text className="mt-6 text-xl font-bold text-center">
+          Aucune récolte enregistrer  !
+        </Text>
+      )}
     </View>
   );
 };
