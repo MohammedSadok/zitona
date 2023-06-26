@@ -3,15 +3,19 @@ import { View, Text, Keyboard, TouchableOpacity } from "react-native";
 import Colors from "../../constants/Colors";
 import Input from "../../components/general/Input";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 const NameScreen = ({ navigation }) => {
   const [inputs, setInputs] = React.useState({
     firstName: "",
     lastName: "",
   });
+
   const [errors, setErrors] = React.useState({});
+
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
+
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
@@ -19,34 +23,40 @@ const NameScreen = ({ navigation }) => {
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
+
     if (!inputs.firstName) {
       handleError("Veuillez entrer le prénom", "firstName");
       isValid = false;
     }
+
     if (!inputs.lastName) {
       handleError("Veuillez entrer le nom", "lastName");
       isValid = false;
     }
+
     if (isValid) {
       navigation.navigate("MailAndPhoneScreen", {
         user: { prenom: inputs.firstName, nom: inputs.lastName },
       });
     }
   };
+
   return (
     <SafeAreaView
       style={{
-        backgroundColor: Colors.backgroundColor,
+        backgroundColor: Colors.white,
+        flex: 1,
+        paddingHorizontal: 15,
+        paddingTop: 50,
       }}
-      className="flex-1 px-5 pt-10"
     >
       <Text style={{ color: Colors.black, fontSize: 40, fontWeight: "bold" }}>
-        Register
+        S'inscrire
       </Text>
-      <Text style={{ color: Colors.grey, fontSize: 18, marginVertical: 10 }}>
-        Entrer Ton Nom et Prenom
+      <Text style={{ color: Colors.grey, fontSize: 16, marginVertical: 10 }}>
+        Entrez votre coordonnées pour vous inscrire
       </Text>
-      <View style={{ marginVertical: 20 }}>
+      <View style={{ marginVertical: 10 }}>
         <Input
           onChangeText={(text) => handleOnchange(text, "firstName")}
           onFocus={() => handleError(null, "firstName")}
@@ -61,7 +71,7 @@ const NameScreen = ({ navigation }) => {
           iconName="account-outline"
           label="Nom"
           placeholder="Entrer votre nom"
-          error={errors.firstName}
+          error={errors.lastName}
         />
 
         <View className="flex-row items-center justify-between">
@@ -70,7 +80,7 @@ const NameScreen = ({ navigation }) => {
             className="flex-row items-center justify-center px-12 py-3 my-3 rounded-lg"
             style={{ backgroundColor: Colors.red }}
           >
-            <Text className="text-xl font-bold text-white text-c">Retoure</Text>
+            <Text className="text-xl font-bold text-white text-c">Retour</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={validate}
@@ -89,7 +99,7 @@ const NameScreen = ({ navigation }) => {
             fontSize: 16,
           }}
         >
-          Already have account ?Login
+          Vous avez déjà un compte ? Se connecter
         </Text>
       </View>
     </SafeAreaView>

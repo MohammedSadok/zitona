@@ -9,18 +9,14 @@ const initialState = {
   error: null,
 };
 
-const URL = ApiUrl + "/auth";
+const URL = ApiUrl + "/api/auth";
 
 export const login = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
-    // await AsyncStorage.removeItem("userData");
     const { rejectWithValue } = thunkAPI;
     try {
-      const response = await axios.post(
-        "https://zitona-production.up.railway.app/api/auth/login",
-        userData
-      );
+      const response = await axios.post(URL + "/login", userData);
       const data = response.data;
       await AsyncStorage.setItem(
         "userData",
@@ -32,8 +28,7 @@ export const login = createAsyncThunk(
         token: data.access_token,
       };
     } catch (error) {
-      console.error(error);
-      return rejectWithValue(error.message);
+      return rejectWithValue("L'adresse e-mail ou mot de passe est invalide");
     }
   }
 );
@@ -41,18 +36,25 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
+    console.log("=>  file: authSlice.js:39  userData:", userData)
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.post(URL + "/register", userData);
-      const data = response.data.data;
+      console.log("=>  file: authSlice.js:42  response:", response.data)
+      const data = response.data.body.data;
 
-      // Store the token in localStorage or a secure storage solution
-      setToken(data.token);
-
-      return data.user;
+      await AsyncStorage.setItem(
+        "userData",
+        JSON.stringify({ ...userData, id: data.user.id })
+      );
+      await AsyncStorage.setItem("token", JSON.stringify(data.access_token));
+      return {
+        user: { ...userData, id: data.user.id },
+        token: data.access_token,
+      };
     } catch (error) {
       console.error(error);
-      return rejectWithValue(error.message);
+      return rejectWithValue("L'adresse e-mail deja existe !");
     }
   }
 );
@@ -75,6 +77,9 @@ export const checkUserIfExist = createAsyncThunk(
   async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
+      // await AsyncStorage.removeItem("userData");
+      // await AsyncStorage.removeItem("token");
+
       const user = await AsyncStorage.getItem("userData");
       const token = await AsyncStorage.getItem("token");
       return user
@@ -100,7 +105,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.access_token;
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -115,7 +120,8 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

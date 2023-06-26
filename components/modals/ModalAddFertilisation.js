@@ -134,7 +134,7 @@ const ModalAddFertilisation = ({
     return null;
   }
   return (
-    <ModalPopUp isVisible={isVisible} setIsVisible={cancel} title="Récolt">
+    <ModalPopUp isVisible={isVisible} setIsVisible={cancel} title="Fertilisation">
       <ScrollView className="px-1" style={{ width: width * 0.85 }}>
         <View className="w-full">
           <Input

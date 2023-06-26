@@ -25,6 +25,7 @@ import { createRecolt, updateRecolt } from "../../redux/recoltSlice";
 import { formatDate } from "../../utils/dateHandlers";
 
 const width = Dimensions.get("screen").width;
+
 var methodesRecolte = [
   "Manuelle",
   "Mécanique",
@@ -33,7 +34,7 @@ var methodesRecolte = [
   "À secouage manuel",
   "À secouage pneumatique",
 ];
-
+var qualiteRecolte = ["BONNE", "MOYENNE", "MAUVAISE"];
 const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
   const dispatch = useDispatch();
   const recolt = useSelector((state) =>
@@ -46,7 +47,7 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     commentaire: "",
     quantite: "",
     methode: "",
-    qualite: "Vierge",
+    qualite: "",
     cout: "",
     parcelle: {
       id: parcelle.id,
@@ -72,7 +73,7 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
         commentaire: "",
         quantite: "",
         methode: "",
-        qualite: "Vierge",
+        qualite: "",
         cout: "",
         parcelle: {
           id: parcelle.id,
@@ -115,6 +116,10 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
     }
     if (!inputs.cout) {
       handleError("Vous devez entrer le cout", "cout");
+      isValid = false;
+    }
+    if (!inputs.qualite) {
+      handleError("Vous devez entrer la qualité", "qualite");
       isValid = false;
     }
     if (isValid) {
@@ -187,6 +192,43 @@ const ModalAddRecolt = ({ isVisible, ok, cancel, id, toggleModalDelete }) => {
           />
           {errors.methode && (
             <Text className="text-xs text-red-500">{errors.methode}</Text>
+          )}
+          <Text className="mt-1 mb-2">Qualité de récolt</Text>
+          <SelectDropdown
+            data={qualiteRecolte}
+            defaultValue={inputs.qualite}
+            onSelect={(selectedItem, index) => {
+              setInputs((prevState) => ({
+                ...prevState,
+                qualite: selectedItem,
+              }));
+              setErrors((prevState) => ({ ...prevState, qualite: "" }));
+            }}
+            defaultButtonText={"Sélectionner la qualité"}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            buttonStyle={styles.dropdown2BtnStyle}
+            buttonTextStyle={styles.dropdown2BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={Colors.black}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown2DropdownStyle}
+            rowStyle={styles.dropdown2RowStyle}
+            rowTextStyle={styles.dropdown2RowTxtStyle}
+          />
+          {errors.qualite && (
+            <Text className="text-xs text-red-500">{errors.qualite}</Text>
           )}
           <Text className="my-1">Date</Text>
           <TouchableOpacity

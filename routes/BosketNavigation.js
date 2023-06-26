@@ -5,6 +5,7 @@ import Maladie from "../screens/Maladie";
 import Traitement from "../screens/Traitement";
 import Bosket from "../screens/Bosket";
 import TraitementFSTR from "../screens/TraitementFSTR";
+import NotificationScreen from "../screens/profile/NotificationScreen";
 import {
   useFonts,
   Mulish_400Regular,
@@ -37,7 +38,11 @@ const BosketNavigation = () => {
         component={Bosket}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Recolt" component={Recolt} options={{ title: "Récolte" }}/>
+      <Stack.Screen
+        name="Recolt"
+        component={Recolt}
+        options={{ title: "Récolte" }}
+      />
       <Stack.Screen name="Fertilisation" component={Fertilisation} />
       <Stack.Screen name="Maladie" component={Maladie} />
       <Stack.Screen name="TraitementFSTR" component={TraitementFSTR} />
@@ -46,6 +51,7 @@ const BosketNavigation = () => {
         component={Traitement}
         options={{ title: "Traitement" }}
       />
+      <Stack.Screen name="Notifications" component={NotificationScreen} />
     </Stack.Navigator>
   );
 };

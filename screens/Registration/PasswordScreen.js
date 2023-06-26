@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,17 +6,55 @@ import {
   Keyboard,
   ScrollView,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import Colors from "../../constants/Colors";
 import Input from "../../components/general/Input";
-
+import messaging from "@react-native-firebase/messaging";
+import { useDispatch,useSelector } from "react-redux";
+import { register } from "../../redux/authSlice";
+import Loader from "../../components/general/Loader";
 const PasswordScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.userAuth);
   const [inputs, setInputs] = React.useState({
     password: "",
     confirmation: "",
+    deviceToken: "",
   });
+  
+  // const requestUserPermission = async () => {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  //   if (enabled) {
+  //     console.log("Authorization status:", authStatus);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (requestUserPermission()) {
+  //     messaging()
+  //       .getToken()
+  //       .then((token) => {
+  //         setInputs((prevState) => ({ ...prevState, deviceToken: token }));
+  //       });
+  //   } else {
+  //     console.log("Authorization status:", authStatus);
+  //   }
+  // }, []);
+
   const [errors, setErrors] = React.useState({});
   const { user } = route.params;
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Error", error);
+    }
+  }, [error]);
+
+  
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -39,7 +77,14 @@ const PasswordScreen = ({ navigation, route }) => {
     }
 
     if (isValid) {
-      console.log({ user: { motDePasse: inputs.password, ...user } });
+      dispatch(
+        register({
+          ...user,
+          role: "USER",
+          password: inputs.password,
+          // deviceToken: inputs.deviceToken,
+        })
+      );
     }
   };
 
@@ -51,17 +96,18 @@ const PasswordScreen = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: Colors.white, flex: 1 }}>
+      <Loader visible={loading}/>
       {/* <Loader visible={loading} /> */}
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}
       >
         <Text style={{ color: Colors.black, fontSize: 40, fontWeight: "bold" }}>
-          Register
+          S'inscrire
         </Text>
-        <Text style={{ color: Colors.grey, fontSize: 18, marginVertical: 10 }}>
-          Entrer votre mot de passe
+        <Text style={{ color: Colors.grey, fontSize: 16, marginVertical: 10 }}>
+          Entrez votre coordonnées pour vous inscrire
         </Text>
-        <View style={{ marginVertical: 20 }}>
+        <View style={{ marginVertical: 10 }}>
           <Input
             onChangeText={(text) => handleOnchange(text, "password")}
             onFocus={() => handleError(null, "password")}
@@ -113,7 +159,7 @@ const PasswordScreen = ({ navigation, route }) => {
               fontSize: 16,
             }}
           >
-            Vous avez deja un compte ?Login
+            Vous avez déjà un compte ? Se connecter
           </Text>
         </View>
       </ScrollView>

@@ -5,6 +5,7 @@ import recoltSlice from "./recoltSlice";
 import maladeSlice from "./maladeSlice";
 import fertilisationSlice from "./fertilisationSlice";
 import traitementSlice from "./traitementSlice";
+import notificationSlice from "./notificationSlice";
 export const store = configureStore({
   reducer: {
     userAuth: authSlice,
@@ -13,5 +14,6 @@ export const store = configureStore({
     malades: maladeSlice,
     fertilisations: fertilisationSlice,
     traitements: traitementSlice,
+    notifications: notificationSlice,
   },
 });

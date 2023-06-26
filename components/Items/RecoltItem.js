@@ -21,10 +21,10 @@ const RecoltItem = ({
     color: "",
     name: "",
   };
-  if (qualite === "Bonne") {
+  if (qualite === "BONNE") {
     quality.color = Colors.green;
     quality.name = "smileo";
-  } else if (qualite === "Moyenne") {
+  } else if (qualite === "MOYENNE") {
     quality.color = Colors.gray;
     quality.name = "meh";
   } else {

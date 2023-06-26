@@ -12,9 +12,9 @@ import {
 const TabArr = [
   {
     route: "BosketNavigation",
-    label: "Bosket",
-    type: Icons.MaterialIcons,
-    icon: "agriculture",
+    label: "Home",
+    type: Icons.Ionicons,
+    icon: "home",
     component: BosketNavigation,
   },
   {

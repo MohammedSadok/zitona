@@ -41,9 +41,8 @@ const BosketsScreen = () => {
     (state) => state.parcelles
   );
   const { token, user } = useSelector((state) => state.userAuth);
-
-    let totalDarbre = 0;
-    parcelles.forEach(item => totalDarbre += item.nombreDarbre);
+  let totalDarbre = 0;
+  parcelles.forEach((item) => (totalDarbre += item.nombreDarbre));
   const [marker, setMarker] = useState(null);
   const [error, setError] = useState(false);
 
@@ -101,7 +100,7 @@ const BosketsScreen = () => {
         toggleModalUpdate={() => {
           setItem((prev) => ({ ...prev, isVisibleAdd: true, id: item.id }));
         }}
-        image={randomImages[item.id%10]}
+        image={randomImages[item.id % 10]}
       />
     );
   };
@@ -159,7 +158,7 @@ const BosketsScreen = () => {
           style={{ fontFamily: "Mulish_700Bold" }}
           className="text-3xl font-bold"
         >
-          {parcelles.length} Boskets
+          {parcelles.length} Parcellles
         </Text>
         <Text className="text-base">{totalDarbre} Arbre</Text>
       </View>
@@ -190,11 +189,17 @@ const BosketsScreen = () => {
           Créer un nouveau parcelle
         </Text>
       </TouchableOpacity>
-      <FlatList
-        data={parcelles}
-        renderItem={Items}
-        keyExtractor={(item) => item.id}
-      />
+      {parcelles.length > 0 ? (
+        <FlatList
+          data={parcelles}
+          renderItem={Items}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <Text className="mt-6 text-xl font-bold text-center">
+          Aucune parcelle enregistrer !
+        </Text>
+      )}
     </View>
   );
 };

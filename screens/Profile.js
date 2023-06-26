@@ -22,7 +22,7 @@ import Icon, { Icons } from "../components/general/Icons";
 import ModalPassword from "../components/modals/ModalPassword";
 const Profile = ({ navigation }) => {
   const { user } = useSelector((state) => state.userAuth);
-  const { parcelles, loading, error, parcelle } = useSelector(
+  const { totalRecolte, totalCoutDepence, parcelle } = useSelector(
     (state) => state.parcelles
   );
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ const Profile = ({ navigation }) => {
         title="Quiter"
       >
         <View className="w-4/6 px-3">
-          <Text className="">Vouler vous vraiement quitter l'application</Text>
+          <Text className="">Voulez vous vraiement quitter l'application</Text>
           <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
             <TouchableOpacity
               className="px-6 py-2.5 bg-red-600 rounded-md"
@@ -94,7 +94,9 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </ImageBackground>
         </View>
-        <Text className="my-2 text-2xl font-bold capitalize">{user.prenom + ' ' + user.nom}</Text>
+        <Text className="my-2 text-2xl font-bold capitalize">
+          {user.prenom + " " + user.nom}
+        </Text>
       </View>
       <View
         className="flex-col justify-between w-full p-2 m-2 bg-white rounded-md"
@@ -146,7 +148,17 @@ const Profile = ({ navigation }) => {
               size={30}
             />
             <Text style={styles.text}>la récolte</Text>
-            <Text style={styles.textBold}>100 kg</Text>
+            <Text style={styles.textBold}>{totalRecolte} kg</Text>
+          </View>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#ffd60a"}
+              name={"dollar-sign"}
+              type={Icons.FontAwesome5}
+              size={30}
+            />
+            <Text style={styles.text}>la dépense</Text>
+            <Text style={styles.textBold}>{totalCoutDepence} dh</Text>
           </View>
         </View>
       </View>
@@ -169,7 +181,7 @@ const Profile = ({ navigation }) => {
           color={"#E0FDFF"}
           handleClick={() => setIsVisibleP(true)}
         />
-        {/* <Item
+        <Item
           title={"Portefeuille"}
           text={"Liste des dépenses"}
           image={require("../assets/profile/protfolio.png")}
@@ -177,7 +189,7 @@ const Profile = ({ navigation }) => {
           height={18}
           color={"#F1E0FF"}
           handleClick={() => navigation.navigate("Portefeuille")}
-        /> */}
+        />
         <Item
           title={"Notifications"}
           text={"Liste des notifications"}

@@ -6,10 +6,46 @@ const initialState = {
   loading: false,
   error: null,
   parcelle: { id: 0 },
+  totalRecolte: 0,
+  totalCoutDepence: 0,
 };
 
 const URL = ApiUrl + "/parcelles";
 
+export const getTotalRecolte = createAsyncThunk(
+  "parcelles/getTotalRecolte",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axios.get(ApiUrl + "/recoltes/parcelle/count_recolt/" + data.id, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const getTotalDepence = createAsyncThunk(
+  "parcelles/fetchTotalCoutDepence",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axios.get(ApiUrl + "/parcelles/depence/" + data.id, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
 export const fetchParcelles = createAsyncThunk(
   "parcelles/fetchParcelles",
   async (user, thunkAPI) => {
@@ -106,6 +142,34 @@ const parcelleSlice = createSlice({
         state.parcelles = action.payload;
       })
       .addCase(fetchParcelles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //depence
+      .addCase(getTotalDepence.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTotalDepence.fulfilled, (state, action) => {
+        state.loading = false;
+        state.totalCoutDepence = action.payload;
+      })
+      .addCase(getTotalDepence.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      //total recolte
+      .addCase(getTotalRecolte.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTotalRecolte.fulfilled, (state, action) => {
+        state.loading = false;
+        state.totalRecolte = action.payload;
+      })
+      .addCase(getTotalRecolte.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

@@ -1,11 +1,25 @@
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navigate from "../components/Navigate";
 import Colors from "../constants/Colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon, { Icons } from "../components/general/Icons";
 import Task from "../components/Task";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import Loader from "../components/general/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { getTotalDepence, getTotalRecolte } from "../redux/parcelleSlice";
+import {
+  useFonts,
+  Mulish_400Regular,
+  Mulish_700Bold,
+} from "@expo-google-fonts/mulish";
 const slides = {
   fertilisation: require("../assets/navigation/fertiliser.png"),
   arrosage: require("../assets/navigation/arrosage.png"),
@@ -14,11 +28,28 @@ const slides = {
 };
 
 const Bosket = ({ navigation }) => {
-  const { parcelle } = useSelector((state) => state.parcelles);
+  const dispatch = useDispatch();
+  const { parcelle, totalRecolte, totalCoutDepence, loading } = useSelector(
+    (state) => state.parcelles
+  );
+  const { user,token } = useSelector((state) => state.userAuth);
+  useEffect(() => {
+    dispatch(getTotalDepence({ token: token, id: parcelle.id }));
+    dispatch(getTotalRecolte({ token: token, id: parcelle.id }));
+  }, [dispatch]);
+
+  const [loaded] = useFonts({
+    Mulish_400Regular,
+    Mulish_700Bold,
+  });
+  if (!loaded) {
+    return null;
+  }
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: Colors.backgroundColor }]}
     >
+      <Loader visible={loading} />
       <View className="flex-row items-center justify-between h-20 p-2 px-4">
         <View className="flex-row items-center space-x-3">
           <Image
@@ -27,13 +58,25 @@ const Bosket = ({ navigation }) => {
             source={require("../assets/profile/user.png")}
           />
           <View>
-            <Text>Sadok</Text>
-            <Text>Mohammed</Text>
+            <Text>{user.nom}</Text>
+            <Text>{user.prenom}</Text>
           </View>
         </View>
-        <Ionicons name="notifications-outline" size={24} color={Colors.black} />
+        <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
+          <Icon
+            type={Icons.Ionicons}
+            name="notifications-outline"
+            size={24}
+            color={Colors.black}
+          />
+        </TouchableOpacity>
       </View>
-      <Text className="ml-3 font-bold underline ">Tools</Text>
+      <Text
+        className="mt-0 ml-3 text-xl"
+        style={{ fontFamily: "Mulish_700Bold" }}
+      >
+        Outils
+      </Text>
       <View
         horizontal
         className="flex-row items-center justify-around py-1"
@@ -67,7 +110,7 @@ const Bosket = ({ navigation }) => {
           elevation: 1,
         }}
       >
-        <Text className="mb-2 text-xl" style={{fontFamily:"Mulish_700Bold"}}>
+        <Text className="mb-2 text-xl" style={{ fontFamily: "Mulish_700Bold" }}>
           {parcelle.title}
         </Text>
         <View className="flex-row items-center justify-between px-3">
@@ -103,7 +146,17 @@ const Bosket = ({ navigation }) => {
               size={30}
             />
             <Text style={styles.text}>la récolte</Text>
-            <Text style={styles.textBold}>100 kg</Text>
+            <Text style={styles.textBold}>{totalRecolte} kg</Text>
+          </View>
+          <View className="flex-col items-center justify-between space-y-1">
+            <Icon
+              color={"#ffd60a"}
+              name={"dollar-sign"}
+              type={Icons.FontAwesome5}
+              size={30}
+            />
+            <Text style={styles.text}>la dépense</Text>
+            <Text style={styles.textBold}>{totalCoutDepence} dh</Text>
           </View>
         </View>
       </View>

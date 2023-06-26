@@ -5,39 +5,40 @@ import {
   Keyboard,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Colors from "../constants/Colors";
 import Input from "../components/general/Input";
 import { useState } from "react";
-import { loginStart, loginSuccess, loginFailure } from "../redux/authSlice";
 import Loader from "../components/general/Loader";
 import { login } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { useEffect } from "react";
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const isLoading = useSelector((state) => state.userAuth.loading);
-
+  const { loading, error } = useSelector((state) => state.userAuth);
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Error", error);
+    }
+  }, [error]);
   const validate = async () => {
     Keyboard.dismiss();
     let isValid = true;
     if (!inputs.email) {
       handleError("Veuillez entrer votre adresse e-mail", "email");
       isValid = false;
-      // dispatch(loginFailure("login failed"));
     }
     if (!inputs.password) {
       handleError("Veuillez entrer votre mot de passe", "password");
       isValid = false;
-      // dispatch(loginFailure("login failed"));
     }
     if (isValid) {
-      dispatch(login(inputs));
+       dispatch(login(inputs));
+      
     }
-    // login(inputs.email, inputs.password);
   };
 
   const handleOnchange = (text, input) => {
@@ -56,13 +57,14 @@ const Login = ({ navigation }) => {
           source={require("../assets/logo.png")}
         /> */}
       </View>
-      <Loader visible={isLoading} />
+
+      <Loader visible={loading} />
       <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
         <Text style={{ color: Colors.black, fontSize: 40, fontWeight: "bold" }}>
-          Log In
+          Se connecter
         </Text>
         <Text style={{ color: Colors.grey, fontSize: 18, marginTop: 5 }}>
-          Enter Your Details to Login
+          Entrez vos informations de connexion
         </Text>
         <View style={{ marginVertical: 20 }}>
           <Input
@@ -77,7 +79,7 @@ const Login = ({ navigation }) => {
             onChangeText={(text) => handleOnchange(text, "password")}
             onFocus={() => handleError(null, "password")}
             iconName="lock-outline"
-            label="Mot de pass"
+            label="Mot de passe"
             placeholder="Saisissez votre mot de passe"
             error={errors.password}
             password
@@ -87,7 +89,9 @@ const Login = ({ navigation }) => {
             className="flex-row items-center justify-center px-6 py-3 my-3 rounded-lg"
             style={{ backgroundColor: Colors.green }}
           >
-            <Text className="text-xl font-bold text-white text-c">Log In</Text>
+            <Text className="text-xl font-bold text-white text-c">
+              Se connecter
+            </Text>
           </TouchableOpacity>
 
           <Text
@@ -99,13 +103,14 @@ const Login = ({ navigation }) => {
               fontSize: 16,
             }}
           >
-            Don't have account ?Register
+            Vous n'avez pas de compte ? S'inscrire
           </Text>
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   image: {
     marginTop: 60,
@@ -118,4 +123,5 @@ const styles = StyleSheet.create({
     height: 150,
   },
 });
+
 export default Login;
