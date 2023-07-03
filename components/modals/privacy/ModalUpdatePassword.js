@@ -9,9 +9,13 @@ import React from "react";
 import ModalPopUp from "../ModalPopUp";
 import Colors from "../../../constants/Colors";
 import Input from "../../general/Input";
+import { useSelector,useDispatch } from "react-redux";
+import { updateProfileName } from "../../../redux/authSlice";
 const width = Dimensions.get("screen").width;
 
 const ModalUpdatePassword = ({ isVisible, changeVisibility }) => {
+  const dispatch = useDispatch();
+  const { user,token } = useSelector((state) => state.userAuth);
   const [inputs, setInputs] = React.useState({
     password: "",
     confirmation: "",

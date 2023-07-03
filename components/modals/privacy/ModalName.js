@@ -5,18 +5,30 @@ import {
   Dimensions,
   Keyboard,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import ModalPopUp from "../ModalPopUp";
 import Colors from "../../../constants/Colors";
 import Input from "../../general/Input";
 const width = Dimensions.get("screen").width;
-
+import Loader from "../../general/Loader";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProfileName } from "../../../redux/authSlice";
 const ModalName = ({ isVisible, changeVisibility }) => {
+  const dispatch = useDispatch();
+  const { user, token, loading, error } = useSelector(
+    (state) => state.userAuth
+  );
   const [errors, setErrors] = React.useState({});
   const [inputs, setInputs] = React.useState({
     firstName: "",
     lastName: "",
   });
+  useEffect(() => {
+    setInputs({
+      firstName: user.nom,
+      lastName: user.prenom,
+    });
+  }, [user.nom, user.prenom]);
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -29,7 +41,14 @@ const ModalName = ({ isVisible, changeVisibility }) => {
       isValid = false;
     }
     if (isValid) {
-      console.log(inputs);
+      dispatch(
+        updateProfileName({
+          id: user.id,
+          nom: inputs.lastName,
+          prenom: inputs.firstName,
+          token: token,
+        })
+      );
     }
   };
 
@@ -54,6 +73,7 @@ const ModalName = ({ isVisible, changeVisibility }) => {
           label="Prénom"
           placeholder="Entrer votre prénom"
           error={errors.firstName}
+          value={inputs.firstName + ""}
         />
         <Input
           onChangeText={(text) => handleOnchange(text, "lastName")}
@@ -61,7 +81,8 @@ const ModalName = ({ isVisible, changeVisibility }) => {
           iconName="account-outline"
           label="Nom"
           placeholder="Entrer votre nom"
-          error={errors.firstName}
+          error={errors.lastName}
+          value={inputs.lastName + ""}
         />
         <View className="flex-row-reverse items-center justify-between ">
           <TouchableOpacity

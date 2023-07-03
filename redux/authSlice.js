@@ -32,15 +32,46 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const updateProfileName = createAsyncThunk(
+  "auth/updateProfile",
+  async (userData, thunkAPI) => {
+    console.log("=>  file: authSlice.js:38  userData:", userData);
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await axios.put(
+        ApiUrl +
+          `/users/${userData.id}/nom-prenom?nom=${userData.nom}&prenom=${userData.prenom}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      console.log("=>  file: authSlice.js:45  response:", response.data);
+      // const user = await AsyncStorage.getItem("userData");
+      // const newUser = JSON.parse(user);
+      // await AsyncStorage.setItem(
+      //   "userData",
+      //   JSON.stringify({
+      //     ...newUser,
+      //     nom: userData.nom,
+      //     prenom: userData.prenom,
+      //   })
+      // );
+      // return newUser;
+    } catch (error) {
+      console.log("=>  file: authSlice.js:58  error:", error);
+      return rejectWithValue("An error occurred while updating the profile");
+    }
+  }
+);
 
 export const register = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
-    console.log("=>  file: authSlice.js:39  userData:", userData)
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await axios.post(URL + "/register", userData);
-      console.log("=>  file: authSlice.js:42  response:", response.data)
       const data = response.data.body.data;
 
       await AsyncStorage.setItem(
@@ -126,10 +157,23 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
 
-    // Logout
-    builder
+      //update User Name
+      .addCase(updateProfileName.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfileName.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.user = action.payload;
+      })
+      .addCase(updateProfileName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Logout
       .addCase(logout.pending, (state) => {
         state.loading = true;
         state.error = null;
