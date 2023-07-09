@@ -129,6 +129,9 @@ const parcelleSlice = createSlice({
     SelectParcelle: (state, action) => {
       state.parcelle = action.payload;
     },
+    InitializeParcelle: (state) => {
+      state.parcelle = { id: 0 };
+    },
   },
   extraReducers: (builder) => {
     //fetch posts

@@ -20,6 +20,7 @@ import {
 import Colors from "../constants/Colors";
 import Icon, { Icons } from "../components/general/Icons";
 import ModalPassword from "../components/modals/ModalPassword";
+import { InitializeParcelle } from "../redux/parcelleSlice";
 const Profile = ({ navigation }) => {
   const { user } = useSelector((state) => state.userAuth);
   const { totalRecolte, totalCoutDepence, parcelle } = useSelector(
@@ -50,7 +51,10 @@ const Profile = ({ navigation }) => {
           <View className="flex-row items-center justify-between mt-5 mb-3 space-x-6">
             <TouchableOpacity
               className="px-6 py-2.5 bg-red-600 rounded-md"
-              onPress={() => dispatch(logout())}
+              onPress={() => {
+                dispatch(logout());
+                dispatch(InitializeParcelle());
+              }}
             >
               <Text
                 className="text-xl text-white"
