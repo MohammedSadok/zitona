@@ -6,7 +6,7 @@ import {
   Mulish_400Regular,
   Mulish_700Bold,
 } from "@expo-google-fonts/mulish";
-const Task = ({ done }) => {
+const Task = ({object,text}) => {
   const [loaded] = useFonts({
     Mulish_400Regular,
     Mulish_700Bold,
@@ -25,28 +25,13 @@ const Task = ({ done }) => {
           style={{ fontFamily: "Mulish_700Bold" }}
           className="text-lg"
         >
-          Arrosage
+          {object}
         </Text>
         <Text style={{ fontFamily: "Mulish_400Regular" }}>
-          description sur l’arrosage ...description sur l’arrosage
-          ...description sur l’arrosage ...
+          {text}
         </Text>
       </View>
-      {done ? (
-        <Icon
-          color={"#169823"}
-          name={"checkcircleo"}
-          type={Icons.AntDesign}
-          size={32}
-        />
-      ) : (
-        <Icon
-          color={"#DD1D1D"}
-          name={"closecircleo"}
-          type={Icons.AntDesign}
-          size={32}
-        />
-      )}
+      
     </TouchableOpacity>
   );
 };

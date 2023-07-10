@@ -108,9 +108,6 @@ export const checkUserIfExist = createAsyncThunk(
   async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      // await AsyncStorage.removeItem("userData");
-      // await AsyncStorage.removeItem("token");
-
       const user = await AsyncStorage.getItem("userData");
       const token = await AsyncStorage.getItem("token");
       return user

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Image
 } from "react-native";
 import Colors from "../constants/Colors";
 import Input from "../components/general/Input";
@@ -52,10 +53,10 @@ const Login = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: Colors.white, flex: 1 }}>
       <View style={styles.imageContainer}>
-        {/* <Image
+        <Image
           style={styles.image}
-          source={require("../assets/logo.png")}
-        /> */}
+          source={require("../assets/icon-removebg.png")}
+        />
       </View>
 
       <Loader visible={loading} />
@@ -113,8 +114,8 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   image: {
-    marginTop: 60,
-    height: 300,
+    marginTop: 50,
+    height: 200,
     resizeMode: "contain",
   },
   imageContainer: {

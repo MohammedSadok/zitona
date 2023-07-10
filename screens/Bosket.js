@@ -161,7 +161,7 @@ const Bosket = ({ navigation }) => {
         </View>
       </View>
       <View className="flex-row items-center justify-between mx-3 my-1">
-        <Text className="text-xl font-bold">Tâches</Text>
+        <Text className="text-xl font-bold">Activités</Text>
         <Icon
           color={"black"}
           name={"tasks"}
@@ -170,10 +170,8 @@ const Bosket = ({ navigation }) => {
         />
       </View>
       <ScrollView>
-        <Task done={true} />
-        <Task done={false} />
-        <Task done={false} />
-        <Task done={true} />
+        <Task object={"Traitement phytosanitaire"} />
+        <Task object={"Recolte"} />
       </ScrollView>
     </SafeAreaView>
   );
