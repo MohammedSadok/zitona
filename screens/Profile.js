@@ -21,7 +21,11 @@ import {
 import Colors from "../constants/Colors";
 import Icon, { Icons } from "../components/general/Icons";
 import ModalPassword from "../components/modals/ModalPassword";
+<<<<<<< HEAD
 
+=======
+import { InitializeParcelle } from "../redux/parcelleSlice";
+>>>>>>> 8081257059f0eb330c8a2c220b5d3804d8825fb7
 const Profile = ({ navigation }) => {
   const { user } = useSelector((state) => state.userAuth);
   const { totalRecolte, totalCoutDepence, parcelle } = useSelector(
